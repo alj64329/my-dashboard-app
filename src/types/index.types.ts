@@ -6,7 +6,7 @@ export interface Company{
 }
 export enum Role{
     admin,
-    pm,
+    manager,
     employee
 }
 
@@ -17,4 +17,22 @@ export interface User{
     email:string,
     companyId:string,
     role: Role
+}
+
+export enum Status{
+    planned,
+    active,
+    completed
+}
+
+export interface Project{
+    projId: string,
+    companyId: string,
+    managerId:string,
+    member:string[],//array of empIds
+    projName:string,
+    desc:string,
+    startData:Date,
+    endDate:Date,
+    status: Status
 }
