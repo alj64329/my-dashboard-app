@@ -5,7 +5,7 @@ export default function Home() {
     <div className="flex justify-center pt-20">
       <div>
         <Link 
-        href="/signup"
+        href="/admin-signup"
         className="bg-(--color-second-green) py-3 px-[1.3rem] rounded-3xl text-white font-karla font-bold">
         Get Started
         </Link>

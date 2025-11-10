@@ -1,3 +1,8 @@
+export type AuthFormprops ={
+    h2Title:string,
+    authFormType:  "signup-step1"|"signup-step2"|"login"
+}
+
 export interface Company{
     companyId: string,
     companyName:string,
