@@ -5,10 +5,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 
-const AuthFormBase = ({h2Title, authFormType}:AuthFormprops) => {
+const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const router = useRouter()
 
-    const handleSubmit = (e: React.FormEvent)=>{
+    //data parameter is neeed to sign up company
+
+    //
+    const handleNext = (e: React.FormEvent)=>{
         e.preventDefault()
         router.push("/user-signup/step2")
     }
@@ -20,17 +23,17 @@ const AuthFormBase = ({h2Title, authFormType}:AuthFormprops) => {
             </h2>
         </div>
         <div className="flex justify-center flex-col w-fit mx-auto bg-white py-20 px-16">
-            {/* Heading text in white box */}
+        {/* Heading text in white box */}
             {authFormType==="signup-step1"&&
             <h3 className="text-center font-bold text-lg text-grey-500 pb-13">
                 It is our pleasure to have you on board!
             </h3>
             }
-            {/* signup for employee, step2 form can be shared with admin */}
+        {/* signup for employee, step2 form can be shared with admin */}
             {authFormType==="signup-step1"&&
             <form action="" id="signup-form"
                className="flex flex-col gap-5"
-               onSubmit={handleSubmit}>
+               onSubmit={handleNext}>
                 <input type="text" name="name" id="name" 
                 placeholder="Enter your name"
                 className="auth-form-input w-full" />
@@ -59,7 +62,7 @@ const AuthFormBase = ({h2Title, authFormType}:AuthFormprops) => {
             </form>
             }
 
-            {/* Passwprd */}
+        {/* Passwprd */}
             {authFormType==="signup-step2"&&
                 <form action="" 
                 className="flex flex-col gap-5 text-grey-500">
@@ -71,7 +74,7 @@ const AuthFormBase = ({h2Title, authFormType}:AuthFormprops) => {
                     </div>
                     <div className='flex flex-col gap-2'>
                         <label htmlFor="">Confirm password</label>
-                        <input type="password" name="signup-password" id="signup-password" 
+                        <input type="password" name="comfirm-password" id="confirm-password" 
                         placeholder="Confirm your password"
                         className="auth-form-input w-[250px]" />
                     </div>
