@@ -25,7 +25,7 @@ const signup = () => {
         //store company name and email in localStorage
         localStorage.setItem(
             "registrationData",
-            JSON.stringify({company, email, name})
+            JSON.stringify({company, email, name, "role":"admin"})
         )
 
         router.push("/admin-signup/step2")

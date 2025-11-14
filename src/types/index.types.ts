@@ -1,7 +1,21 @@
 export type AuthFormprops ={
     h2Title:string,
     authFormType:  "signup-step1"|"signup-step2"|"login",
-    data?:{}
+    data?:AdminData| EmployeeData
+}
+
+export type AdminData={
+    role:"admin",
+    company:string,
+    name:string,
+    email:string
+}
+
+export type EmployeeData ={
+    role:"employee",
+    name:string,
+    email:string,
+    companyCode:string
 }
 
 export interface Company{

@@ -1,20 +1,56 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AuthFormprops } from '../types/index.types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { validatePassword } from '../utils/validatePassword'
+import { set } from 'react-hook-form'
+import { createAccount, registerCompany } from '../features/auth/auth.features'
 
 
 const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const router = useRouter()
+    const [password1, setPassword1] =useState("")
+    const [password2, setPassword2] =useState("")
+    const [message1, setMessage1] = useState("")
+    const [message2, setMessage2] = useState("")
 
     //data parameter is neeed to sign up company
-
-    //
-    const handleNext = (e: React.FormEvent)=>{
+    const handleSignup =async(e:React.FormEvent)=>{
         e.preventDefault()
-        router.push("/user-signup/step2")
+        //password check
+        //if one of them is empty
+        if(password1!==password2){
+            setMessage2("Both password need to match")
+            return
+        }
+        console.log(data)
+        //sign up company
+        if(!data ){
+            return
+        }
+        if(data.role==="admin"){
+            //account create
+            // const accountCreated = await createAccount(data.name, data.email, password1)
+            
+            // if(!accountCreated){
+            //     return
+            // }
+            //login to appwrite
+
+           const company= await registerCompany(data.company, data.email)
+           console.log(company)
+        }
+
+
+
     }
+
+    useEffect(()=>{
+        setMessage1(validatePassword(password1))
+    }, [password1])
+
+
   return (
     <div className="bg-grey-25 min-h-screen">
         <div className="flex justify-center pt-20 pb-15 px-8">
@@ -22,67 +58,43 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
                 {h2Title}
             </h2>
         </div>
-        <div className="flex justify-center flex-col w-fit mx-auto bg-white py-20 px-16">
-        {/* Heading text in white box */}
-            {authFormType==="signup-step1"&&
-            <h3 className="text-center font-bold text-lg text-grey-500 pb-13">
-                It is our pleasure to have you on board!
-            </h3>
-            }
-        {/* signup for employee, step2 form can be shared with admin */}
-            {authFormType==="signup-step1"&&
-            <form action="" id="signup-form"
-               className="flex flex-col gap-5"
-               onSubmit={handleNext}>
-                <input type="text" name="name" id="name" 
-                placeholder="Enter your name"
-                className="auth-form-input w-full" />
-
-                <input type="email" name="email" id="email" 
-                placeholder="Enter your email"
-                className="auth-form-input w-full" />
-
-                <input type="text" name="companyCode" id="companyCode" 
-                placeholder="Enter the company code"
-                className="auth-form-input w-full" />
-
-                <button type="submit"
-                className="text-white mt-4 bg-second-green font-bold py-3 text-lg rounded-lg cursor-pointer"
-                >
-                Next
-                </button>
-                <div>
-                    <Link href="/admin-signup"
-                    className="flex justify-center text-grey-500">
-                        Not Employee? 
-                        <span
-                        className="text-[#2D88D4] font-bold">Admin sign up</span>
-                    </Link>
-                </div>
-            </form>
-            }
+        <div className="flex justify-center flex-col w-fit mx-auto bg-white py-12 px-16">
 
         {/* Passwprd */}
             {authFormType==="signup-step2"&&
-                <form action="" 
+                <form 
+                onSubmit={handleSignup} 
                 className="flex flex-col gap-5 text-grey-500">
+                    <div>
+                        <ul className='text-sm list-disc w-fit mx-auto text-main-green'>
+                            <li>Minimum 8 charcters</li>
+                            <li>1 Number or 1 Special character</li>
+                            <li>At least 1 uppercase</li>
+                            <li>At least 1 lowercase</li>
+                        </ul>
+                    </div>
                     <div className='flex flex-col gap-2'>
-                        <label htmlFor="">Choose a password</label>
-                        <input type="password" name="signup-password" id="signup-password" 
+                        <label htmlFor="">Create a password</label>
+                        <input type="password" name="password1" id="password1" 
                         placeholder="Enter your password"
+                        value={password1}
+                        onChange={(e)=>setPassword1(e.target.value)}
                         className="auth-form-input w-[250px]" />
+                        <div className='text-sm text-red-800'>
+                            {message1?message1:""}
+                        </div>
                     </div>
                     <div className='flex flex-col gap-2'>
                         <label htmlFor="">Confirm password</label>
-                        <input type="password" name="comfirm-password" id="confirm-password" 
+                        <input type="password" name="password2" id="password2" 
                         placeholder="Confirm your password"
+                        value={password2}
+                        onChange={(e)=>setPassword2(e.target.value)}
                         className="auth-form-input w-[250px]" />
+                        <div className='text-sm text-red-800'>
+                            {message2?message2:""}
+                        </div>
                     </div>
-
-                    <div>
-
-                    </div>
-
 
                     <button type="submit"
                     className="text-white mt-4 bg-second-green font-bold py-3 text-lg rounded-lg cursor-pointer"

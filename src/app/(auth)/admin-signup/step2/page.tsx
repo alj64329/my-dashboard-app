@@ -1,4 +1,4 @@
-
+"use client"
 import AuthFormBase from '@/src/components/AuthFormBase'
 
 
