@@ -14,6 +14,7 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const [password2, setPassword2] =useState("")
     const [message1, setMessage1] = useState("")
     const [message2, setMessage2] = useState("")
+    const [error, setError] = useState("")
 
     //data parameter is neeed to sign up company
     const handleSignup =async(e:React.FormEvent)=>{
@@ -29,17 +30,28 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         if(!data ){
             return
         }
-        if(data.role==="admin"){
-            //account create
-            // const accountCreated = await createAccount(data.name, data.email, password1)
-            
+        if(data.role==="admin"){    
             // if(!accountCreated){
             //     return
             // }
             //login to appwrite
-
+            //create company account
            const company= await registerCompany(data.company, data.email)
-           console.log(company)
+           if(!company) return
+           console.log(company?.$id)
+           const companyId = company.$id
+           //account create in Auth
+           const accountCreated = await createAccount(data.name, data.email, password1)
+           if(!accountCreated) {
+            setError("Email taken")
+            return
+           }
+           const appwriteId = accountCreated.$id
+           //create user in user table
+           
+
+        
+
         }
 
 

@@ -24,11 +24,35 @@ export const companyExist = async (comapnyName:string, adminEmail:string)=>{
     }
 }
 
+export const sendOTP = async(email:string)=>{
+    try{
+        const sessionToken = await account.createEmailToken({
+            userId:ID.unique(),
+            email:email
+        })
+        console.log(sessionToken)
+    }catch(err){
+        console.log(err)
+    }
+}
+
+export const otpVerification= async(userId:string, secret:string)=>{
+    try{
+        const session = await account.createSession({
+            userId:userId,
+            secret:secret
+        })
+        console.log(session)
+    }catch(err){
+        console.log(err)
+    }
+}
+
 //create comapny row in table
 export const registerCompany = async (companyName:string, adminEmail:string)=>{
     try{
         const code = nanoid(10)
-        const res = await tableDB.createRow({
+        const company = await tableDB.createRow({
             databaseId: DATABASE_ID,
             tableId: COMPANY_TABLE_ID,
             rowId:ID.unique(),
@@ -40,7 +64,7 @@ export const registerCompany = async (companyName:string, adminEmail:string)=>{
         })
 
         console.log("Company is successfully registered")
-        return res
+        return company
     }catch(err){
         console.log(err)
     }
@@ -49,13 +73,14 @@ export const registerCompany = async (companyName:string, adminEmail:string)=>{
 //create auth
 export const createAccount = async (name:string, email:string,password:string)=>{
     try{
-         const res = await account.create({
+         const user = await account.create({
             userId:ID.unique(),
             name:name,
             email,
             password
         })
-        return true
+        console.log("Account succefully created")
+        return user
     }catch(err){
         console.log(err)
         return false

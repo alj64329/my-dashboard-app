@@ -1,6 +1,6 @@
 "use client"
 
-import { companyExist } from "@/src/features/auth/auth.features"
+import { companyExist, sendOTP } from "@/src/features/auth/auth.features"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -17,7 +17,7 @@ const signup = () => {
     const handleNext = async (e: React.FormEvent)=>{
         e.preventDefault()
         const isCompanyRegister = await companyExist(company, email)
-
+        sendOTP(email)
         if(isCompanyRegister){
             setError("Company name exist in our database.")
             return
