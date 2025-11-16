@@ -1,11 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { AuthFormprops } from '../types/index.types'
+import { AuthFormprops, Role, User } from '../types/index.types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { validatePassword } from '../utils/validatePassword'
-import { set } from 'react-hook-form'
-import { createAccount, registerCompany } from '../features/auth/auth.features'
+import { registerCompany, registerUser, updateAccount } from '../features/auth/auth.features'
 
 
 const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
@@ -31,36 +30,48 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
             return
         }
         if(data.role==="admin"){    
-            // if(!accountCreated){
-            //     return
-            // }
-            //login to appwrite
             //create company account
-           const company= await registerCompany(data.company, data.email)
+           const company= await registerCompany(data.company, data.email, data.appwriteId)
            if(!company) return
-           console.log(company?.$id)
+
            const companyId = company.$id
+
            //account create in Auth
-           const accountCreated = await createAccount(data.name, data.email, password1)
-           if(!accountCreated) {
-            setError("Email taken")
+           const isAccountUpdated = await updateAccount(password1)
+           if(!isAccountUpdated) {
+            setError("Somethig went wrong")
             return
            }
-           const appwriteId = accountCreated.$id
-           //create user in user table
-           
 
-        
+           //create user in user table
+           const newUser :Omit<User, 'userId'> ={
+            name: data.name,
+            email:data.email,
+            companyId,
+            role: Role.admin,
+            appwriteId: data.appwriteId
+           }
+
+           const response = await registerUser(newUser)
+           console.log(response)
 
         }
-
-
 
     }
 
     useEffect(()=>{
         setMessage1(validatePassword(password1))
     }, [password1])
+
+    useEffect(()=>{
+        if(password1!==password2){
+            setMessage2("Both password need to match")
+            return
+        }else{
+            setMessage2("")
+            return
+        }
+    },[password2])
 
 
   return (

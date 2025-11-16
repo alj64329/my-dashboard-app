@@ -17,15 +17,20 @@ const signup = () => {
     const handleNext = async (e: React.FormEvent)=>{
         e.preventDefault()
         const isCompanyRegister = await companyExist(company, email)
-        sendOTP(email)
+
         if(isCompanyRegister){
             setError("Company name exist in our database.")
             return
         }
+        const temp = await sendOTP(email)
+
+        if(!temp) return
+
+        const appwriteId = temp.userId
         //store company name and email in localStorage
         localStorage.setItem(
             "registrationData",
-            JSON.stringify({company, email, name, "role":"admin"})
+            JSON.stringify({company, appwriteId, email, name, "role":"admin"})
         )
 
         router.push("/admin-signup/step2")
@@ -38,7 +43,7 @@ const signup = () => {
                 Welcome, create your company account
             </h2>
         </div>
-        <div className="flex justify-center flex-col w-fit mx-auto bg-white py-16 px-16">
+        <div className="flex justify-center flex-col w-fit mx-auto bg-white py-5 md:py-16 px-16">
             <h3 className="text-center font-bold text-lg text-grey-500 pb-13">
                 It is our pleasure to have you on board!
             </h3>

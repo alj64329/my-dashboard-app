@@ -4,18 +4,25 @@ export type AuthFormprops ={
     data?:AdminData| EmployeeData
 }
 
+export type OtpProps={
+    data: AdminData|EmployeeData|undefined,
+    route:string
+}
+
 export type AdminData={
     role:"admin",
     company:string,
     name:string,
     email:string
+    appwriteId:string
 }
 
 export type EmployeeData ={
     role:"employee",
     name:string,
     email:string,
-    companyCode:string
+    companyCode:string,
+    appwriteId:string
 }
 
 export interface Company{
@@ -25,18 +32,18 @@ export interface Company{
 
 }
 export enum Role{
-    admin,
-    manager,
-    employee
+    admin="admin",
+    manager = "manager",
+    employee = "employee"
 }
 
 export interface User{
     userId:string,
-    firstname:string,
-    lastname:string,
+    name:string,
     email:string,
     companyId:string,
     role: Role
+    appwriteId:string
 }
 
 export enum Status{

@@ -1,13 +1,17 @@
 'use client'
 import React, { FormEvent, useRef, useState } from 'react'
+import { otpVerification } from '../features/auth/auth.features'
+import { AdminData, EmployeeData, OtpProps } from '../types/index.types'
+import { useRouter } from 'next/navigation'
 
-const OTPForm = () => {
+const OTPForm = ({data, route}:OtpProps) => {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
     const [isHovered, setIsHovered] = useState(false)
+    const [error, setError] = useState("")
+    const router =useRouter()
 
     const handleInput =(e:React.ChangeEvent<HTMLInputElement>, index:number)=>{
         const value = e.target.value
-        console.log(inputRefs)
 
         if(!/^[0-9]$/.test(value)){
             e.target.value=""
@@ -40,7 +44,17 @@ const OTPForm = () => {
     }
     
     const optHandler = async(otp:string)=>{
-        console.log(otp)
+        if(!data) return
+        console.log(data)
+        const userId = data.appwriteId
+        const isVerified = otpVerification(userId, otp)
+
+        if(!isVerified){
+            setError("Invalid Code")
+            return
+        }
+        router.push(route)
+
     }
   return (
     <form id="otp-form"
@@ -58,6 +72,8 @@ const OTPForm = () => {
                     key={i}  />
             ))}
         </div>
+        {error&&
+        <div className='text-sm text-red-800'>{error}</div>}
         <div className="max-w-[260px] mx-auto mt-18">
             <button type="submit"
                 className={`w-full font-bold inline-flex justify-center whitespace-nowrap rounded-lg bg-second-green px-3.5 py-2.5 text-sm text-white shadow-sm shadow-teal-950/10 cursor-pointer hover:grayscale-50${isHovered&&"grayscale-50"}`}>

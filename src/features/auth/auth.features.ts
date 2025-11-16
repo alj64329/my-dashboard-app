@@ -1,9 +1,11 @@
 import { account, tableDB } from "@/src/lib/appwrite"
+import { User } from "@/src/types/index.types"
 import { ID, Query } from "appwrite"
 import { nanoid } from "nanoid"
 
 const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
 const COMPANY_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_COMPANY_TABLE_ID as string
+const USER_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_USER_TABLE_ID as string
 
 //Check if the company exist in table or not
 export const companyExist = async (comapnyName:string, adminEmail:string)=>{
@@ -31,6 +33,7 @@ export const sendOTP = async(email:string)=>{
             email:email
         })
         console.log(sessionToken)
+        return sessionToken
     }catch(err){
         console.log(err)
     }
@@ -42,14 +45,17 @@ export const otpVerification= async(userId:string, secret:string)=>{
             userId:userId,
             secret:secret
         })
+
+        if(!session) return false
         console.log(session)
+        return true
     }catch(err){
         console.log(err)
     }
 }
 
 //create comapny row in table
-export const registerCompany = async (companyName:string, adminEmail:string)=>{
+export const registerCompany = async (companyName:string, adminEmail:string, adminAppwriteId:string)=>{
     try{
         const code = nanoid(10)
         const company = await tableDB.createRow({
@@ -59,7 +65,8 @@ export const registerCompany = async (companyName:string, adminEmail:string)=>{
             data:{
                 company_name:companyName,
                 company_code: code,
-                adminEmail:adminEmail
+                adminEmail:adminEmail,
+                adminAppwriteId:adminAppwriteId
             }
         })
 
@@ -70,17 +77,14 @@ export const registerCompany = async (companyName:string, adminEmail:string)=>{
     }
 }
 
-//create auth
-export const createAccount = async (name:string, email:string,password:string)=>{
+//update auth password
+export const updateAccount = async (password:string)=>{
     try{
-         const user = await account.create({
-            userId:ID.unique(),
-            name:name,
-            email,
+         const updates = await account.updatePassword({
             password
         })
-        console.log("Account succefully created")
-        return user
+        console.log("Password successfully updated")
+        return true
     }catch(err){
         console.log(err)
         return false
@@ -103,27 +107,23 @@ export const login= async(email:string, password:string)=>{
     }
 }
 
-//create user row in user table
-export const registerUser = async (companyName:string, adminEmail:string)=>{
+//add user row in user table
+export const registerUser = async ({name, email, companyId, role, appwriteId}:Omit<User, 'userId'>)=>{
     try{
-        const code = nanoid(10)
         const res = await tableDB.createRow({
             databaseId: DATABASE_ID,
-            tableId: COMPANY_TABLE_ID,
+            tableId: USER_TABLE_ID,
             rowId:ID.unique(),
             data:{
-                company_name:companyName,
-                comapny_code: code,
-                adminEmail:adminEmail
+                name,
+                email,
+                companyId,
+                role,
+                appwriteId
             }
         })
-
-        if(!res.ok){
-            console.log("somethig went wrong")
-            return false
-        }
-        console.log("Company is successfully registered")
-        return true
+        console.log("User is successfully registered")
+        return res
     }catch(err){
         console.log(err)
     }
