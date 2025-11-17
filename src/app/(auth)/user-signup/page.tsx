@@ -1,14 +1,42 @@
 "use client"
 
+import { findCompany, sendOTP } from '@/src/features/auth/auth.features'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 
 const page = () => {
   const router = useRouter()
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [code, setCode] = useState("")
+  const [error, setError] = useState("")
 
-  const handleNext = (e: React.FormEvent)=>{
+  const handleNext = async (e: React.FormEvent)=>{
       e.preventDefault()
+
+      //Find a company from company code
+      const company = await findCompany(code) 
+
+      if(!company){
+        setError("Company code is invalid!")
+        return
+      }
+
+      const companyId = company[0].$id
+
+      //send OTP code to see if email exist
+      const temp = await sendOTP(email)
+
+      if(!temp) return
+
+      const appwriteId = temp.userId
+        //store company name and email in localStorage
+        localStorage.setItem(
+            "registrationData",
+            JSON.stringify({companyId, appwriteId, email, name, "role":"employee"})
+        )
+
       router.push("/user-signup/step2")
   }
   return (
@@ -27,15 +55,24 @@ const page = () => {
                onSubmit={handleNext}>
                 <input type="text" name="name" id="name" 
                 placeholder="Enter your name"
+                value={name}
+                onChange={(e)=>setName(e.target.value)}
                 className="auth-form-input w-full" />
 
                 <input type="email" name="email" id="email" 
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
                 className="auth-form-input w-full" />
 
                 <input type="text" name="companyCode" id="companyCode" 
                 placeholder="Enter the company code"
+                value={code}
+                onChange={(e)=>setCode(e.target.value)}
                 className="auth-form-input w-full" />
+
+                {error&&
+                <div className='text-sm text-red-800'>{error}</div>}
 
                 <button type="submit"
                 className="text-white mt-4 bg-second-green font-bold py-3 text-lg rounded-lg cursor-pointer"

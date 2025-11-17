@@ -128,3 +128,21 @@ export const registerUser = async ({name, email, companyId, role, appwriteId}:Om
         console.log(err)
     }
 }
+
+export const findCompany = async(companyCode:string)=>{
+    try{
+        const company = await tableDB.listRows({
+            databaseId: DATABASE_ID,
+            tableId: COMPANY_TABLE_ID,
+            queries:[
+                Query.equal("company_code",companyCode)
+            ]
+        })
+       if(company.rows.length===0){
+        return false
+       }
+       return company.rows
+    }catch(err){
+        console.log(err)
+    }
+}

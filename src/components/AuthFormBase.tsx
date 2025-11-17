@@ -4,7 +4,7 @@ import { AuthFormprops, Role, User } from '../types/index.types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { validatePassword } from '../utils/validatePassword'
-import { registerCompany, registerUser, updateAccount } from '../features/auth/auth.features'
+import { login, registerCompany, registerUser, updateAccount } from '../features/auth/auth.features'
 
 
 const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
@@ -14,6 +14,9 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const [message1, setMessage1] = useState("")
     const [message2, setMessage2] = useState("")
     const [error, setError] = useState("")
+    //login useState
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
 
     //data parameter is neeed to sign up company
     const handleSignup =async(e:React.FormEvent)=>{
@@ -24,41 +27,42 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
             setMessage2("Both password need to match")
             return
         }
-        console.log(data)
         //sign up company
         if(!data ){
             return
         }
+        let companyId =""
         if(data.role==="admin"){    
             //create company account
            const company= await registerCompany(data.company, data.email, data.appwriteId)
            if(!company) return
 
-           const companyId = company.$id
+           companyId = company.$id
+        }
+        if(data.role==="employee"){    
+           companyId = data.companyId
+        }
+        //account create in Auth
+        const isAccountUpdated = await updateAccount(password1)
+        if(!isAccountUpdated) {
+        setError("Somethig went wrong")
+        return
+        }
+        
+        if(!companyId) return
 
-           //account create in Auth
-           const isAccountUpdated = await updateAccount(password1)
-           if(!isAccountUpdated) {
-            setError("Somethig went wrong")
-            return
-           }
-
-           //create user in user table
-           const newUser :Omit<User, 'userId'> ={
-            name: data.name,
-            email:data.email,
-            companyId,
-            role: Role.admin,
-            appwriteId: data.appwriteId
-           }
-
-           const response = await registerUser(newUser)
-           console.log(response)
-
+        //create user in user table
+        const newUser :Omit<User, 'userId'> ={
+        name: data.name,
+        email:data.email,
+        companyId,
+        role: data.role==="admin"?Role.admin:Role.employee,
+        appwriteId: data.appwriteId
         }
 
+        const response = await registerUser(newUser)
     }
-
+    
     useEffect(()=>{
         setMessage1(validatePassword(password1))
     }, [password1])
@@ -72,6 +76,17 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
             return
         }
     },[password2])
+
+    const loginHandler= async(e:React.FormEvent)=>{
+        e.preventDefault()
+
+        const user = login(email, password)
+
+        if(!user) return
+
+        //User logged in direct to dashboard
+
+    }
 
 
   return (
@@ -129,11 +144,16 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
 
             {authFormType==="login"&&
                 <form action="login-form" 
-                className="flex flex-col gap-5">
+                className="flex flex-col gap-5"
+                onSubmit={loginHandler}>
                     <input type="email" name="login-email" id="login-email" 
                     placeholder="Enter your email"
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
                     className="auth-form-input w-full" />
                     <input type="password" name="login-password" id="login-password" 
+                    value={password}
+                    onChange={(e)=>setPassword(e.target.value)}
                     placeholder="Enter your password"
                     className="auth-form-input w-full" />
 

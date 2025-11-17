@@ -21,7 +21,7 @@ export type EmployeeData ={
     role:"employee",
     name:string,
     email:string,
-    companyCode:string,
+    companyId:string,
     appwriteId:string
 }
 
