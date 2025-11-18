@@ -9,7 +9,6 @@ export default function Home() {
 
   const loggedInUser = userInfo?.loggedInUser
   const setLoggedInUser = userInfo?.setLoggedInUser
-  console.log(loggedInUser)
 
   return (
     <div className="flex justify-center pt-20">
@@ -25,9 +24,10 @@ export default function Home() {
           className="text-second-green ps-2">Log in</Link>
         </div>
         {/* Temporary Log out */}
+        {loggedInUser&&
         <div className="text-grey-200 pt-16 text-center">
           <button onClick={logout}>Logout</button>
-        </div>
+        </div>}
       </div>
     </div>
   );

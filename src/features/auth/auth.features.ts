@@ -2,6 +2,7 @@ import { account, tableDB } from "@/src/lib/appwrite"
 import { User } from "@/src/types/index.types"
 import { AppwriteException, ID, Query } from "appwrite"
 import { nanoid } from "nanoid"
+import { useRouter } from "next/navigation"
 
 const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
 const COMPANY_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_COMPANY_TABLE_ID as string
@@ -154,6 +155,7 @@ export const logout = async()=>{
         await account.deleteSession({
             sessionId:'current'
         })
+
     }catch(err){
         if(err instanceof AppwriteException){
             if(err.code === 401){

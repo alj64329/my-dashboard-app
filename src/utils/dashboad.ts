@@ -31,7 +31,7 @@ export const getCompany = async(companyId:string)=>{
             tableId:COMPANY_TABLE_ID,
             rowId:companyId
         })
-        return company.rows
+        return company
     }catch(err){
         console.log(err)
     }

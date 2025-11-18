@@ -5,6 +5,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { validatePassword } from '../utils/validatePassword'
 import { login, registerCompany, registerUser, updateAccount } from '../features/auth/auth.features'
+import { getUser } from '../utils/dashboad'
+import { Models } from 'appwrite'
+import { UserRow } from '../types/usercontent.types'
 
 
 const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
@@ -19,7 +22,8 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const [password, setPassword] = useState("")
 
     //initialize dashboard route
-    const dashboardRoute = data?.role==="admin"?"/admin":"/employee"
+    let dashboardRoute :string
+    
 
     //data parameter is neeed to sign up company
     const handleSignup =async(e:React.FormEvent)=>{
@@ -36,13 +40,15 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         }
         let companyId =""
         if(data.role==="admin"){    
+            dashboardRoute = "/admin"
             //create company account
            const company= await registerCompany(data.company, data.email, data.appwriteId)
            if(!company) return
 
            companyId = company.$id
         }
-        if(data.role==="employee"){    
+        if(data.role==="employee"){   
+            dashboardRoute ="/employee" 
            companyId = data.companyId
         }
         //account create in Auth
@@ -86,9 +92,14 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const loginHandler= async(e:React.FormEvent)=>{
         e.preventDefault()
 
-        const user = login(email, password)
+        const user = await login(email, password)
 
         if(!user) return
+        const userId = user.$id
+        const userRow = await getUser(userId) as UserRow[]
+        const role = userRow[0].role
+        dashboardRoute = role === Role.admin?"/admin":"/employee"
+
         console.log("user successfully login")
 
         //User logged in direct to dashboard
