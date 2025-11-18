@@ -1,6 +1,6 @@
 import { account, tableDB } from "@/src/lib/appwrite"
 import { User } from "@/src/types/index.types"
-import { ID, Query } from "appwrite"
+import { AppwriteException, ID, Query } from "appwrite"
 import { nanoid } from "nanoid"
 
 const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
@@ -26,6 +26,7 @@ export const companyExist = async (comapnyName:string, adminEmail:string)=>{
     }
 }
 
+//send one time password to email address
 export const sendOTP = async(email:string)=>{
     try{
         const sessionToken = await account.createEmailToken({
@@ -39,6 +40,7 @@ export const sendOTP = async(email:string)=>{
     }
 }
 
+//verify the one time password
 export const otpVerification= async(userId:string, secret:string)=>{
     try{
         const session = await account.createSession({
@@ -144,5 +146,19 @@ export const findCompany = async(companyCode:string)=>{
        return company.rows
     }catch(err){
         console.log(err)
+    }
+}
+
+export const logout = async()=>{
+    try{
+        await account.deleteSession({
+            sessionId:'current'
+        })
+    }catch(err){
+        if(err instanceof AppwriteException){
+            if(err.code === 401){
+                console.log("none has been logged in")
+            }
+        }
     }
 }

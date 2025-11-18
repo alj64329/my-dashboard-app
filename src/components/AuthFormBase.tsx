@@ -18,6 +18,9 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
+    //initialize dashboard route
+    const dashboardRoute = data?.role==="admin"?"/admin":"/employee"
+
     //data parameter is neeed to sign up company
     const handleSignup =async(e:React.FormEvent)=>{
         e.preventDefault()
@@ -61,8 +64,11 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         }
 
         const response = await registerUser(newUser)
+
+        //direct to dashboard
+        router.push(dashboardRoute)
     }
-    
+
     useEffect(()=>{
         setMessage1(validatePassword(password1))
     }, [password1])
@@ -83,9 +89,10 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         const user = login(email, password)
 
         if(!user) return
+        console.log("user successfully login")
 
         //User logged in direct to dashboard
-
+        router.push(dashboardRoute)
     }
 
 

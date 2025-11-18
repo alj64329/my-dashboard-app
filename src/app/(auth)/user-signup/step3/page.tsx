@@ -1,3 +1,4 @@
+"use client"
 import AuthFormBase from '@/src/components/AuthFormBase'
 import { AdminData, EmployeeData } from '@/src/types/index.types'
 import React, { useEffect, useState } from 'react'

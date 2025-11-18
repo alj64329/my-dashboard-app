@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import "../css/globals.css";
+import { UserProvider } from "../context/UserContext";
+import {config} from "@fortawesome/fontawesome-svg-core"
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss= false
 
 export const metadata: Metadata = {
   title: "Struck",
@@ -16,7 +20,9 @@ export default function RootLayout({
       <body
         className='antialiased max-w-[1800px] mx-auto'
       >
-        {children}
+        <UserProvider>
+          {children}
+        </UserProvider>
       </body>
     </html>
   );

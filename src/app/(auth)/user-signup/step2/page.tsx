@@ -1,3 +1,4 @@
+'use client'
 import OTPForm from '@/src/components/OTPForm'
 import { AdminData, EmployeeData } from '@/src/types/index.types'
 import React, { useEffect, useState } from 'react'
