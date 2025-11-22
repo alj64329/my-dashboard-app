@@ -40,7 +40,7 @@ export const UserProvider =({children}:{children:ReactNode})=>{
         getSession()
     }, [])
 
-    const value = { loggedInUser, setLoggedInUser, company, user }
+    const value = { loggedInUser, setLoggedInUser, user, setUser, company, setCompany }
 
     return(
         <UserContext.Provider value={value}>

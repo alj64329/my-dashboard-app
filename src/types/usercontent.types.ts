@@ -4,7 +4,9 @@ export interface UserContentType{
     loggedInUser:Models.User<any> |null,
     setLoggedInUser: React.Dispatch<React.SetStateAction<Models.User<any> | null>>,
     user:UserRow |null
-    company: CompanyRow | null
+    setUser: React.Dispatch<React.SetStateAction<UserRow|null>>
+    company: CompanyRow | null,
+    setCompany: React.Dispatch<React.SetStateAction<CompanyRow|null>>
 }
 
 export interface UserRow extends Models.DefaultRow{

@@ -3,22 +3,23 @@ import { logout } from '@/src/features/auth/auth.features'
 import { useContext } from 'react'
 import { UserContext } from '@/src/context/UserContext'
 import AdminNav from './AdminNav'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
+import { Models } from 'appwrite'
+import { Role } from '@/src/types/index.types'
+import EmployeeNav from './EmployeeNav'
+
 const Sidebar = () => {
   const userInfo= useContext(UserContext)
-  
+  if(!userInfo) return
+  const setLoggedInUser = userInfo.setLoggedInUser as React.Dispatch<React.SetStateAction<Models.User<any> | null>>
+  const router = useRouter()
   const companyName = userInfo?.company?.company_name
   const role = userInfo?.user?.role
-
-  const useLogout = ()=>{
-    const router = useRouter()
-
-    const handleLogout = async()=>{
+  
+  const useLogout = async()=>{
       await logout()
+      setLoggedInUser(null)
       router.push("/")
-    }
-
-    return handleLogout
   }
 
 
@@ -32,7 +33,8 @@ const Sidebar = () => {
             </div>
 
             <div className="w-full px-8 pt-15 pb-8 flex flex-col min-h-[73vh] justify-between">
-              <AdminNav/>
+              {role === Role.admin&&<AdminNav/>}
+              {role === Role.employee&&<EmployeeNav/>}
 
               <div className='flex justify-center'>
                 <button 

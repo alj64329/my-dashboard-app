@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { logout } from "../features/auth/auth.features";
 
@@ -9,6 +9,11 @@ export default function Home() {
 
   const loggedInUser = userInfo?.loggedInUser
   const setLoggedInUser = userInfo?.setLoggedInUser
+  
+  useEffect(()=>{
+
+  },[])
+  
 
   return (
     <div className="flex justify-center pt-20">
@@ -26,7 +31,7 @@ export default function Home() {
         {/* Temporary Log out */}
         {loggedInUser&&
         <div className="text-grey-200 pt-16 text-center">
-          <button onClick={logout}>Logout</button>
+          <button  className="cursor-pointer" onClick={logout}>Logout</button>
         </div>}
       </div>
     </div>

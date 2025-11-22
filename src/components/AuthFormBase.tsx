@@ -1,17 +1,17 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AuthFormprops, Role, User } from '../types/index.types'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { validatePassword } from '../utils/validatePassword'
 import { login, registerCompany, registerUser, updateAccount } from '../features/auth/auth.features'
-import { getUser } from '../utils/dashboad'
-import { Models } from 'appwrite'
-import { UserRow } from '../types/usercontent.types'
+import { getCompany, getUser } from '../utils/dashboad'
+import { CompanyRow, UserRow } from '../types/usercontent.types'
+import { UserContext } from '../context/UserContext'
 
 
 const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const router = useRouter()
+    const userInfo = useContext(UserContext)
     const [password1, setPassword1] =useState("")
     const [password2, setPassword2] =useState("")
     const [message1, setMessage1] = useState("")
@@ -42,9 +42,10 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         if(data.role==="admin"){    
             dashboardRoute = "/admin"
             //create company account
-           const company= await registerCompany(data.company, data.email, data.appwriteId)
+           const company= await registerCompany(data.company, data.email, data.appwriteId) as CompanyRow
            if(!company) return
 
+           userInfo?.setCompany(company)
            companyId = company.$id
         }
         if(data.role==="employee"){   
@@ -69,8 +70,8 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         appwriteId: data.appwriteId
         }
 
-        const response = await registerUser(newUser)
-
+        const response = await registerUser(newUser) as UserRow
+        userInfo?.setUser(response)
         //direct to dashboard
         router.push(dashboardRoute)
     }
@@ -94,10 +95,23 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
 
         const user = await login(email, password)
 
-        if(!user) return
+        if(!user){
+            setError("Please check the email and password")
+            return
+        }
+
+        //update loggedin User, user and company
+        userInfo?.setLoggedInUser(user)
         const userId = user.$id
         const userRow = await getUser(userId) as UserRow[]
-        const role = userRow[0].role
+        const userRow0 = userRow[0]
+
+        userInfo?.setUser(userRow0)
+        const role = userRow0.role
+        const companyId = userRow0.companyId
+
+        const company = await getCompany(companyId) as CompanyRow
+        userInfo?.setCompany(company)
         dashboardRoute = role === Role.admin?"/admin":"/employee"
 
         console.log("user successfully login")
@@ -175,6 +189,10 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
                     placeholder="Enter your password"
                     className="auth-form-input w-full" />
 
+                    {error&&
+                    <div className='text-red-800 text-sm'>
+                        {error}
+                    </div>}
                     <button type="submit"
                     className="text-white mt-4 bg-second-green font-bold py-3 text-lg rounded-lg cursor-pointer"
                     >
