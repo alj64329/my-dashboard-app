@@ -25,28 +25,12 @@ const layout = ({children}:{children:React.ReactNode}) => {
   // },[loggedInUser])
 
   return (
-    <div className='flex'>
+    <div className='flex flex-col md:flex-row'>
         <Sidebar/>
         <div className='w-full py-4 px-8 md:px-12'>
           <DashboardHead/>
           <div className='pt-10'>
-            {/* <Welcome/> */}
-            <div className='flex gap-20'>
-              <div className='md:w-[65%]'>
-                <Welcome/>
-                {children}
-              </div>
-              <div>
-                <UserCard />
-                <EventCard/>
-                {role === Role.employee && 
-                <div className='flex flex-col gap-4 pt-6'>
-                  <RequestBtn requestType={RequestType.expense}/>
-                  <RequestBtn requestType={RequestType.leave}/>
-                </div>
-                }
-              </div>
-            </div>
+              {children}
           </div>
         </div>
     </div>

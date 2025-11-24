@@ -1,4 +1,5 @@
 "use client"
+import SumCard from '@/src/components/dashboard/SumCard'
 import { UserContext } from '@/src/context/UserContext'
 import { useContext } from 'react'
 
@@ -8,10 +9,14 @@ const page = () => {
   const company = userInfo?.company
   const companyName = company?.company_name
   return (
-    <div className='flex pt-16 px-8'>
-      <h2 className='text-4xl ps-6'>
-        Welcome to your dashboard{companyName&& `, ${companyName}`} 
-      </h2>
+    <div className='py-8 ps-4'>
+      <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+        <SumCard/>
+        <SumCard/>
+        <SumCard/>
+        <SumCard/>
+      </div>
+
     </div>
   )
 }

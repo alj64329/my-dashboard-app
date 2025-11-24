@@ -1,6 +1,8 @@
 export enum TableType {
     projects="projects",
-    tasks ="tasks"
+    tasks ="tasks",
+    leaveReq ="leaveReq",
+    expenseReq="expenseReq"
 }
 
 export interface PropsTableType{

@@ -9,10 +9,14 @@ export default function Home() {
 
   const loggedInUser = userInfo?.loggedInUser
   const setLoggedInUser = userInfo?.setLoggedInUser
-  
-  useEffect(()=>{
 
-  },[])
+  const logoutHandler = ()=>{
+    logout
+    if(setLoggedInUser){
+      setLoggedInUser(null)
+    }
+
+  }
   
 
   return (
@@ -31,7 +35,7 @@ export default function Home() {
         {/* Temporary Log out */}
         {loggedInUser&&
         <div className="text-grey-200 pt-16 text-center">
-          <button  className="cursor-pointer" onClick={logout}>Logout</button>
+          <button  className="cursor-pointer" onClick={logoutHandler}>Logout</button>
         </div>}
       </div>
     </div>

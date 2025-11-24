@@ -26,6 +26,11 @@ const DTable = ({type}:PropsTableType) => {
             const titles =["Task", "Status", "Deadline"]
             setTableHead(titles)
         }
+        if(type === TableType.leaveReq){
+            setHeading("Pending Leave Requests")
+            const titles =["Employee","Type","From","To","Status"]
+            setTableHead(titles)
+        }
         return
     },[])
   return (
