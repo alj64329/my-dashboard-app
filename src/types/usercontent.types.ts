@@ -14,7 +14,9 @@ export interface UserRow extends Models.DefaultRow{
     email:string,
     companyId: string,
     role: Role,
-    appwriteId:string
+    appwriteId:string,
+    position:string,
+    profilePic:string
 }
 
 export interface CompanyRow extends Models.DefaultRow{

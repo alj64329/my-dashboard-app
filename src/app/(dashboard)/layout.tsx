@@ -1,6 +1,7 @@
 'use client'
 import DashboardHead from '@/src/components/dashboard/DashboardHead'
 import EventCard from '@/src/components/dashboard/EventCard'
+import ProfileSheet from '@/src/components/dashboard/ProfileSheet'
 import RequestBtn from '@/src/components/dashboard/RequestBtn'
 import Sidebar from '@/src/components/dashboard/Sidebar'
 import UserCard from '@/src/components/dashboard/UserCard'
@@ -17,6 +18,7 @@ const layout = ({children}:{children:React.ReactNode}) => {
   const router = useRouter()
   const loggedInUser = userInfo?.loggedInUser
   const role = userInfo?.user?.role
+  const [open, setOpen] = useState(false)
   
   // useEffect(()=>{
   //   if(!loggedInUser){
@@ -28,11 +30,12 @@ const layout = ({children}:{children:React.ReactNode}) => {
     <div className='flex flex-col md:flex-row'>
         <Sidebar/>
         <div className='w-full py-4 px-8 md:px-12'>
-          <DashboardHead/>
+          <DashboardHead setProfileOpen={setOpen}/>
           <div className='pt-10'>
               {children}
           </div>
         </div>
+      <ProfileSheet setProfileOpen={setOpen} open={open}/>
     </div>
   )
 }

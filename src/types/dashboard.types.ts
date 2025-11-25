@@ -1,3 +1,5 @@
+import { Dispatch } from "react"
+
 export enum TableType {
     projects="projects",
     tasks ="tasks",
@@ -16,3 +18,9 @@ export enum RequestType{
 export interface RequestBtnType{
     requestType: RequestType
 }
+
+export type ProfileSheetProps={
+  setProfileOpen: Dispatch<React.SetStateAction<boolean>>,
+  open?:boolean
+}
+
