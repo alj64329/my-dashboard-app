@@ -24,3 +24,11 @@ export type ProfileSheetProps={
   open?:boolean
 }
 
+export interface PropsMenuType{
+    type:ScreenType
+}
+
+export enum ScreenType{
+    desktop ="desktop",
+    mobile = "mobile"
+}

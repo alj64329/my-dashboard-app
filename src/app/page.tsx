@@ -3,9 +3,12 @@ import Link from "next/link";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { logout } from "../features/auth/auth.features";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const userInfo= useContext(UserContext)
+  const router = useRouter()
+  const home="/"
 
   const loggedInUser = userInfo?.loggedInUser
   const setLoggedInUser = userInfo?.setLoggedInUser
@@ -15,7 +18,7 @@ export default function Home() {
     if(setLoggedInUser){
       setLoggedInUser(null)
     }
-
+    router.push(home)
   }
   
 

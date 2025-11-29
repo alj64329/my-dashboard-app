@@ -1,20 +1,28 @@
 'use client'
 import { CldImage } from 'next-cloudinary'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { defaultUser } from '@/src/constants/default.constants'
 import { ProfileSheetProps } from '@/src/types/dashboard.types'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { UserContext } from '@/src/context/UserContext'
+import MobileMenu from './MobileMenu'
 
 const DashboardHead = ({setProfileOpen}:ProfileSheetProps) => {
   const userInfo= useContext(UserContext)
   const userPic= userInfo?.user?.profilePic
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   return (
     <div className='flex justify-between items-center'>
       <div className='flex gap-6 items-center'>
+        {!mobileMenuOpen&&
         <FontAwesomeIcon 
-        icon ={faBars} />
+        icon ={faBars}
+        onClick={()=>setMobileMenuOpen(true)} />}
+        {mobileMenuOpen&&
+        <FontAwesomeIcon
+        icon={faXmark}
+        onClick={()=>setMobileMenuOpen(false)}/>}
         <div
         className='text-xl'>
             Dashboard</div>
@@ -28,6 +36,7 @@ const DashboardHead = ({setProfileOpen}:ProfileSheetProps) => {
         className="rounded-[50%] cursor-pointer"
         onClick={()=>setProfileOpen(true)}/>
       </div>
+      {mobileMenuOpen&& <MobileMenu/>}
     </div>
   )
 }
