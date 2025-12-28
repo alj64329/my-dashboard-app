@@ -1,4 +1,13 @@
 import { Dispatch } from "react"
+import { IconType } from "react-icons/lib"
+
+export type Page="Dashboard" |"Employees"|"Projects" |"Calender"|"Setting" 
+|"Projects"|"Tasks"|"Leave History" | "Expense History" |"Account"
+
+export interface NavUlType {
+    page:Page,
+    icon:IconType
+}
 
 export enum TableType {
     projects="projects",

@@ -2,12 +2,12 @@
 import { logout } from '@/src/features/auth/auth.features'
 import { useContext } from 'react'
 import { UserContext } from '@/src/context/UserContext'
-import AdminNav from './AdminNav'
 import { useRouter } from 'next/navigation'
 import { Models } from 'appwrite'
 import { Role } from '@/src/types/index.types'
 import EmployeeNav from './EmployeeNav'
 import { ScreenType } from '@/src/types/dashboard.types'
+import Nav from '../Nav'
 
 const MobileMenu = () => {
   const userInfo= useContext(UserContext)
@@ -27,8 +27,8 @@ const MobileMenu = () => {
             </div>
 
             <div className="w-full px-8 pt-15 pb-8 flex flex-col min-h-[73vh] justify-between">
-              {role === Role.admin&&<AdminNav type={ScreenType.mobile}/>}
-              {role === Role.employee&&<EmployeeNav type={ScreenType.mobile}/>}
+              {role === Role.admin&&<Nav role={Role.admin} type ={ScreenType.desktop}/>}
+              {role === Role.employee&&<Nav role={Role.admin} type ={ScreenType.desktop}/>}
 
             </div>
         </div>

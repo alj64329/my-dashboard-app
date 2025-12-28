@@ -2,12 +2,12 @@
 import { logout } from '@/src/features/auth/auth.features'
 import { useContext } from 'react'
 import { UserContext } from '@/src/context/UserContext'
-import AdminNav from './AdminNav'
+
 import { useRouter } from 'next/navigation'
 import { Models } from 'appwrite'
 import { Role } from '@/src/types/index.types'
-import EmployeeNav from './EmployeeNav'
 import { ScreenType } from '@/src/types/dashboard.types'
+import Nav from '../Nav'
 
 const Sidebar = () => {
   const userInfo= useContext(UserContext)
@@ -18,7 +18,12 @@ const Sidebar = () => {
   const role = userInfo?.user?.role
   
   const useLogout = async()=>{
+    //log out from Appwrite
       await logout()
+
+      //clear cookies
+      await fetch('/api/auth/logout',{method:"POST"})
+
       setLoggedInUser(null)
       router.push("/")
   }
@@ -34,8 +39,8 @@ const Sidebar = () => {
             </div>
 
             <div className="w-full px-8 pt-15 pb-8 flex flex-col min-h-[73vh] justify-between">
-              {role === Role.admin&&<AdminNav type ={ScreenType.desktop}/>}
-              {role === Role.employee&&<EmployeeNav type={ScreenType.desktop}/>}
+              {role === Role.admin&&<Nav role={Role.admin} type ={ScreenType.desktop}/>}
+              {role === Role.employee&&<Nav role={Role.employee} type ={ScreenType.desktop}/>}
 
               <div className='flex justify-center'>
                 <button 

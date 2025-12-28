@@ -17,6 +17,8 @@ const AutoLogout = () => {
                     await account.deleteSession({
                         sessionId:'current'
                     })
+                //clear cookies
+                await fetch('/api/auth/logout',{method:"POST"})
                     router.push("/")
                 }catch(err){
                     console.log("Logout failed", err)

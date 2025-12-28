@@ -1,4 +1,5 @@
 import { Models, Role } from "appwrite"
+import { Page } from "./dashboard.types"
 
 export interface UserContentType{
     loggedInUser:Models.User<any> |null,
@@ -7,6 +8,8 @@ export interface UserContentType{
     setUser: React.Dispatch<React.SetStateAction<UserRow|null>>
     company: CompanyRow | null,
     setCompany: React.Dispatch<React.SetStateAction<CompanyRow|null>>
+    page:Page,
+    setPage:React.Dispatch<React.SetStateAction<Page>>
 }
 
 export interface UserRow extends Models.DefaultRow{

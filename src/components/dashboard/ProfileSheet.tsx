@@ -18,49 +18,33 @@ const ProfileSheet = ({open, setProfileOpen}:ProfileSheetProps) => {
     const userPic = userInfo?.user?.profilePic
     const fileInputRef = useRef<HTMLInputElement>(null)
 
-    const handleFileChange =(e:React.ChangeEvent<HTMLInputElement>)=>{
-        const file = e.target.files?.[0]
-        console.log(file)
-
-    }
   return (
     <div>
-    <Sheet open={open} onOpenChange={setProfileOpen} >
-        <SheetContent>
-            <SheetHeader>
-            </SheetHeader>
-            <div className="p-8">
-                <div
-                className="text-2xl text-center">Profile</div>
-                <div className="py-12 flex justify-center relative">
-                    <CldUploadWidget uploadPreset="ml_default">
-                        {({ open }) => {
-                            return (
-                            <div 
-                            className="absolute bg-white p-3 rounded-[50%] right-5 top-[10%] border cursor-pointer z-20"
-                            onClick={()=>open()}>
-                                <FontAwesomeIcon icon={faPenToSquare} 
-                                className="text-xl"/>
-                                {/* <input type="file" id="profile_pic" name="profile_pic" 
-                                ref={fileInputRef}
-                                accept=".jpg,.jpeg,.png" 
-                                className="hidden"
-                                onChange={handleFileChange}/> */}
-                            </div>
-                            );
-                        }}
-                    </CldUploadWidget>
-                <CldImage
-                    width={210}
-                    height={210}
-                    src={userPic?userPic:defaultUser.profilePic}
-                    alt={defaultUser.alt}
-                    className="rounded-2xl"/>
-                </div>
+        <CldUploadWidget signatureEndpoint="/api/sign-cloudinary-params">
+      {({ open: openUpload }) => (
+          <Sheet open={open} onOpenChange={setProfileOpen}>
+            <SheetContent>
+              <div className="relative py-12 flex justify-center">
+                <button
+                  type="button"
+                  className="absolute bg-white p-3 rounded-[50%] right-15 top-[10%] border cursor-pointer"
+                  onClick={() => openUpload()}
+                >
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                </button>
 
-            </div>
-        </SheetContent>
-    </Sheet>
+                <CldImage
+                  width={210}
+                  height={210}
+                  src={userPic?userPic:defaultUser.profilePic}
+                  alt="Profile"
+                  className="rounded-2xl"
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
+      )}
+    </CldUploadWidget>
     </div>
   )
 }

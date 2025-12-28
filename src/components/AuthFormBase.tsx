@@ -72,6 +72,8 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
 
         const response = await registerUser(newUser) as UserRow
         userInfo?.setUser(response)
+        //set cookies
+        setCookieSession(newUser.role)
         //direct to dashboard
         router.push(dashboardRoute)
     }
@@ -107,7 +109,7 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         const userRow0 = userRow[0]
 
         userInfo?.setUser(userRow0)
-        const role = userRow0.role
+        const role = userRow0.role as Role
         const companyId = userRow0.companyId
 
         const company = await getCompany(companyId) as CompanyRow
@@ -115,9 +117,17 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         dashboardRoute = role === Role.admin?"/admin":"/employee"
 
         console.log("user successfully login")
+        await setCookieSession(role)
 
         //User logged in direct to dashboard
         router.push(dashboardRoute)
+    }
+    const setCookieSession = async(role:Role)=>{
+        await fetch('/api/auth/set-session',{
+            method: 'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({role})
+        })
     }
 
 
