@@ -36,3 +36,7 @@ export const getCompany = async(companyId:string)=>{
         console.log(err)
     }
 }
+
+export const updateProfilePic = async(profilePic:string)=>{
+    
+}

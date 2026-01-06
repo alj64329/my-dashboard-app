@@ -6,40 +6,51 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { PendingTableExpense, PendingTableLeave } from "./dashboard/admin/AdminTable"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { APTUser } from "../types/appwriteDb.types"
+import { RequestType } from "../types/dashboard.types"
 
 type Props = {
   isOpen:boolean,
-  setIsOpen:()=>void
+  setIsClose:()=>void
   title?:string,
   ContentComponent?:React.ComponentType<
-  {dataset:
-    {
+    {dataset:
+      {
+        type:"expense",
+        data:PendingTableExpense
+      }|{
+        type:"leave",
+        data:PendingTableLeave
+      }}>
+  dataset?:{
       type:"expense",
       data:PendingTableExpense
     }|{
       type:"leave",
       data:PendingTableLeave
-    }}>
-  dataset?:    {
-      type:"expense",
-      data:PendingTableExpense
-    }|{
-      type:"leave",
-      data:PendingTableLeave
-    }| null
+    }| null,
+  employee?:APTUser |null,
+  onUpdate?:(updatedEmp:APTUser)=> void,
+
+  FormComponent?:React.ComponentType<{formType:RequestType}>,
+  formType?:RequestType
 }
 
-const Modal = ({isOpen, setIsOpen, title, ContentComponent, dataset}: Props) => {
-  if(!dataset) return null
+const Modal = ({isOpen, setIsClose, title, ContentComponent, dataset, FormComponent, formType}: Props) => {
+
   return (
     <div>
       <Dialog
-      open={isOpen} onOpenChange={setIsOpen}>
+      open={isOpen} onOpenChange={setIsClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle></DialogTitle>
+            <VisuallyHidden>
+              <DialogTitle></DialogTitle>
+            </VisuallyHidden>
           </DialogHeader>
             {(ContentComponent&& dataset)&&<ContentComponent dataset={dataset}/>}
+            {(FormComponent && formType )&&<FormComponent formType={formType}/>}
         </DialogContent>
       </Dialog>
     </div>

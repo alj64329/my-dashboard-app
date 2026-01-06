@@ -2,7 +2,6 @@
 import { logout } from '@/src/features/auth/auth.features'
 import { useContext } from 'react'
 import { UserContext } from '@/src/context/UserContext'
-
 import { useRouter } from 'next/navigation'
 import { Models } from 'appwrite'
 import { Role } from '@/src/types/index.types'

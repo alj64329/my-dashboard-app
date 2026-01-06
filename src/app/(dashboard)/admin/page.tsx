@@ -69,7 +69,7 @@ const page = () => {
 
       {(isModalOpen&&modalData)&&
       <Modal isOpen={isModalOpen} 
-      setIsOpen={onModaHandler}
+      setIsClose={onModaHandler}
       ContentComponent={PendingReqForm}
       dataset={modalDataset}/>}
 

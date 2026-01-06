@@ -7,6 +7,8 @@ import { login, registerCompany, registerUser, updateAccount } from '../features
 import { getCompany, getUser } from '../utils/dashboad'
 import { CompanyRow, UserRow } from '../types/usercontent.types'
 import { UserContext } from '../context/UserContext'
+import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
+import { Bounce, toast, ToastContainer } from 'react-toastify'
 
 
 const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
@@ -20,6 +22,7 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     //login useState
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [passwordShow, setPasswordShow]= useState(false)
 
     //initialize dashboard route
     let dashboardRoute :string
@@ -62,7 +65,7 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         if(!companyId) return
 
         //create user in user table
-        const newUser :Omit<User, 'userId'> ={
+        const newUser :Omit<User, 'rowId'> ={
         name: data.name,
         email:data.email,
         companyId,
@@ -74,8 +77,22 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         userInfo?.setUser(response)
         //set cookies
         setCookieSession(newUser.role)
+
+        //toaster
+        toast.success('Successfully logged in. You are directing to Dashboard page', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        })
+
         //direct to dashboard
-        router.push(dashboardRoute)
+        router.replace(dashboardRoute)
     }
 
     useEffect(()=>{
@@ -119,6 +136,18 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         console.log("user successfully login")
         await setCookieSession(role)
 
+        //toaster
+        toast.success('Successfully logged in. You are directing to Dashboard page', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            })
         //User logged in direct to dashboard
         router.push(dashboardRoute)
     }
@@ -130,9 +159,14 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         })
     }
 
+    const handleChange = (e:MouseEvent)=>{
+
+    }
+
 
   return (
     <div className="bg-grey-25 min-h-screen">
+        <ToastContainer/>
         <div className="flex justify-center pt-20 pb-15 px-8">
             <h2  className="font-semibold text-grey-400 text-center text-3xl">
                 {h2Title}
@@ -193,11 +227,26 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
                     value={email}
                     onChange={(e)=>setEmail(e.target.value)}
                     className="auth-form-input w-full" />
-                    <input type="password" name="login-password" id="login-password" 
-                    value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="auth-form-input w-full" />
+
+                    <div className='flex items-center auth-form-input'>
+                        <input type={passwordShow?"text":"password"} 
+                        name="login-password" id="login-password" 
+                        value={password}
+                        onChange={(e)=>setPassword(e.target.value)}
+                        placeholder="Enter your password"
+                        className="w-[90%] focus:outline-none focus:ring-0" />
+                        <span
+                        className='text-[22px] text-grey-200'>
+                            {
+                                passwordShow?
+                                <RiEyeCloseLine
+                                onClick={()=>setPasswordShow(false)}/>:
+                                <RiEyeLine
+                                onClick={()=>setPasswordShow(true)}/>
+                            }
+                        </span>
+                    </div>
+
 
                     {error&&
                     <div className='text-red-800 text-sm'>

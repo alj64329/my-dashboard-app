@@ -111,7 +111,7 @@ export const login= async(email:string, password:string)=>{
 }
 
 //add user row in user table
-export const registerUser = async ({name, email, companyId, role, appwriteId}:Omit<User, 'userId'>)=>{
+export const registerUser = async ({name, email, companyId, role, appwriteId}:Omit<User, 'rowId'>)=>{
     try{
         const res = await tableDB.createRow({
             databaseId: DATABASE_ID,
@@ -150,6 +150,7 @@ export const findCompany = async(companyCode:string)=>{
     }
 }
 
+//Log out
 export const logout = async()=>{
     try{
         await account.deleteSession({

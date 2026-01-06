@@ -17,14 +17,22 @@ const page = () => {
     <div className='flex justify-between'>
         <div className='md:w-[65%]'>
           <Welcome/>
-          <div className="py-8 ps-4">
+          <div className="py-2 md:py-7 ps-4">
             <div className="flex flex-col gap-12">
+              <div className="md:hidden">
+                <EventCard/>
+                {role !== Role.admin && 
+                <div className='flex gap-4 pt-6'>
+                  <RequestBtn requestType={RequestType.expense}/>
+                  <RequestBtn requestType={RequestType.leave}/>
+                </div>}
+              </div>
               <DTable type={TableType.projects} />
               <DTable type={TableType.tasks} />
             </div>
-            </div>
+          </div>
         </div>
-        <div>
+        <div className="hidden md:block">
           <UserCard />
           <EventCard/>
           {role !== Role.admin && 

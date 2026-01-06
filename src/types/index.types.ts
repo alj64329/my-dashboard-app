@@ -38,7 +38,7 @@ export enum Role{
 }
 
 export interface User{
-    userId:string,
+    rowId:string,
     name:string,
     email:string,
     companyId:string,

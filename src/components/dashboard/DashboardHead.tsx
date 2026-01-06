@@ -12,9 +12,15 @@ const DashboardHead = ({setProfileOpen}:ProfileSheetProps) => {
   const userInfo= useContext(UserContext)
   const userPic= userInfo?.user?.profilePic
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const menuOnClose =()=>{
+    setMobileMenuOpen(false)
+  }
   return (
     <div className='flex justify-between items-center'>
       <div className='flex gap-6 items-center'>
+        <div
+        className='md:hidden'>
         {!mobileMenuOpen&&
         <FontAwesomeIcon 
         icon ={faBars}
@@ -23,6 +29,7 @@ const DashboardHead = ({setProfileOpen}:ProfileSheetProps) => {
         <FontAwesomeIcon
         icon={faXmark}
         onClick={()=>setMobileMenuOpen(false)}/>}
+        </div>
         <div
         className='text-xl'>
             Dashboard</div>
@@ -36,7 +43,7 @@ const DashboardHead = ({setProfileOpen}:ProfileSheetProps) => {
         className="rounded-[50%] cursor-pointer"
         onClick={()=>setProfileOpen(true)}/>
       </div>
-      {mobileMenuOpen&& <MobileMenu/>}
+      {mobileMenuOpen&& <MobileMenu onClose={menuOnClose}/>}
     </div>
   )
 }

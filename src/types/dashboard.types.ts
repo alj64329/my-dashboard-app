@@ -6,7 +6,8 @@ export type Page="Dashboard" |"Employees"|"Projects" |"Calender"|"Setting"
 
 export interface NavUlType {
     page:Page,
-    icon:IconType
+    icon:IconType,
+    route:string
 }
 
 export enum TableType {
