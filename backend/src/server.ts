@@ -4,6 +4,8 @@ import cors from 'cors'
 import cookieSession from 'cookie-session'
 import dotenv from 'dotenv'
 import { createServer } from 'http'
+import userRouter from './routes/user.routes'
+import companyRouter from './routes/company.routes'
 
 dotenv.config()
 
@@ -26,11 +28,13 @@ app.use(cookieSession({
   ],
   // maxAge: 30 * 60 * 1000 *10 // 3 mins
 }))
+
 app.use(express.json())
 
 
 //Routes
-// app.use("/users", userRouter)
+app.use("/users", userRouter)
+app.use("/companies", companyRouter)
 
 
 app.get("/", (req: Request, res: Response) => {
@@ -55,7 +59,7 @@ if (!PORT || !CONN_STRING) {
 
 // to see if you can connect to Mongoose
 mongoose
-  .connect(CONN_STRING, {dbName: "wavechat"})
+  .connect(CONN_STRING, {dbName: "my_dashboard_app"})
   .then(() => {
     console.log('connected to MongoDB!')
     server.listen(PORT, () => {

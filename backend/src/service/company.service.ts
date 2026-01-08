@@ -17,16 +17,17 @@ const getByCompanyId = async(companyId:string)=>{
 
 //create comapnay
 const addCompany = async(newCompany:Partial<ICompany>)=>{
-    const {comapny_name} = newCompany
-    if(!comapny_name) return
+    const {company_name} = newCompany
+    if(!company_name) return
 
     //Generate code
     const code = nanoid(10)
 
     return await Company.create({
-        comapny_name,
+        company_name,
         company_code:code
     })
+
 }
 
 //update company

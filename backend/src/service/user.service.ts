@@ -13,6 +13,11 @@ const getById = async(id:string)=>{
     return await User.findById(id)
 }
 
+//get users by companyId
+const getByCompanyId = async(companyId:string)=>{
+    return await User.find({companyId})
+}
+
 //get user by email for login
 const getByEmail = async(email:string)=>{
     return await User.findOne({email}).select('+password')
@@ -20,13 +25,14 @@ const getByEmail = async(email:string)=>{
 
 //create user
 const add = async (newUser:Partial<IUser>)=>{
-    const {email, password} = newUser
-    if(!email ||!password) return
+    const {email, password, name} = newUser
+    if(!email ||!password||!name) return
 
     const hasedPassword = await bcrypt.hash(password,12)
 
     return await User.create({
         email,
+        name,
         password:hasedPassword
     })
 }
@@ -64,6 +70,7 @@ const login = async(details:IUserLogin)=>{
 export default{
     getAll,
     getById,
+    getByCompanyId,
     getByEmail,
     add,
     update,
