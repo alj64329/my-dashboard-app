@@ -13,14 +13,16 @@ const getTeamById = async(id:string)=>{
 
 //create team
 const addTeam = async(newTeam:Partial<ITeam>)=>{
-    const {userId, projectId, projectRole} = newTeam
+    const {userId, projectId, projectRole, startDate, state} = newTeam
 
-    if(!userId||!projectId||!projectRole) return
+    if(!userId||!projectId||!projectRole||!startDate ||!state) return
 
     return await Team.create({
         userId,
         projectId,
-        projectRole
+        projectRole,
+        startDate,
+        state
     })
 }
 

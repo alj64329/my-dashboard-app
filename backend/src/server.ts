@@ -6,6 +6,10 @@ import dotenv from 'dotenv'
 import { createServer } from 'http'
 import userRouter from './routes/user.routes'
 import companyRouter from './routes/company.routes'
+import projectRouter from './routes/project.routes'
+import teamRouter from './routes/team.routes'
+import leaveReqRouter from './routes/leaveReq.routes'
+import expenseReqRouter from './routes/expenseReq.routes'
 
 dotenv.config()
 
@@ -35,7 +39,10 @@ app.use(express.json())
 //Routes
 app.use("/users", userRouter)
 app.use("/companies", companyRouter)
-
+app.use("/projects", projectRouter)
+app.use("/teams", teamRouter)
+app.use("/leave-requests", leaveReqRouter)
+app.use("/expense-requests", expenseReqRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Server is running")

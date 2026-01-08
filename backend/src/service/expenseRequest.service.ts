@@ -16,7 +16,7 @@ const getUserEReq = async(userId:string)=>{
 }
 
 //get requests by companyId
-const getCompLReq = async(companyId:string)=>{
+const getCompEReq = async(companyId:string)=>{
     return await ExpenseRequest.find({companyId})
 }
 
@@ -64,7 +64,7 @@ export default{
     getEReqs,
     getEReqById,
     getUserEReq,
-    getCompLReq,
+    getCompEReq,
     getCompEReqByStatus,
     addERequest,
     updateERequest,
