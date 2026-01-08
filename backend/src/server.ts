@@ -10,6 +10,7 @@ import projectRouter from './routes/project.routes'
 import teamRouter from './routes/team.routes'
 import leaveReqRouter from './routes/leaveReq.routes'
 import expenseReqRouter from './routes/expenseReq.routes'
+import todoRouter from './routes/todo.routes'
 
 dotenv.config()
 
@@ -41,6 +42,7 @@ app.use("/users", userRouter)
 app.use("/companies", companyRouter)
 app.use("/projects", projectRouter)
 app.use("/teams", teamRouter)
+app.use("/todos", todoRouter)
 app.use("/leave-requests", leaveReqRouter)
 app.use("/expense-requests", expenseReqRouter)
 
