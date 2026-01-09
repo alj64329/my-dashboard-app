@@ -82,9 +82,9 @@ const addExpenseReq = async(req: Request<{}, IExpenseRequest>, res: Response) =>
 
 //Update ExpenseReq by id
 const updateExpenseReqById = async(req: Request<{id: string}, Partial<IExpenseRequest>>, res: Response) => {
-  const {title,amount,category,receipt, desc,userId} = req.body
+  const {title,amount,category,receipt, desc,userId, approvalStatus} = req.body
   try{
-    const updatedRequest = await expenseRequestService.updateERequest(req.params.id, {title,amount,category,receipt, desc,userId})
+    const updatedRequest = await expenseRequestService.updateERequest(req.params.id, {title,amount,category,receipt, desc,userId, approvalStatus})
 
     if(!updatedRequest) {
       res.status(500).json({message: "Unable to update ExpenseReq"})

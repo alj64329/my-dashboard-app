@@ -24,7 +24,7 @@ const getMyTodosByStatus = async(userId:string, status:string)=>{
 const addTodos = async(newTodos:Partial<ITodo>)=>{
     const {title, userId,desc, status, priority, due } = newTodos
 
-    if(!title||!userId||!desc||!status||!priority) return
+    if(!title||!userId||!desc||!status||!priority||!due) return
 
     return await Todo.create({
         userId,
@@ -32,7 +32,7 @@ const addTodos = async(newTodos:Partial<ITodo>)=>{
         desc,
         status,
         priority,
-        due
+        due: new Date(due)
     })
 }
 

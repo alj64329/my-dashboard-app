@@ -25,14 +25,15 @@ const getByEmail = async(email:string)=>{
 
 //create user
 const add = async (newUser:Partial<IUser>)=>{
-    const {email, password, name} = newUser
-    if(!email ||!password||!name) return
+    const {email, password, name, companyId} = newUser
+    if(!email ||!password||!name ||!companyId) return
 
     const hasedPassword = await bcrypt.hash(password,12)
 
     return await User.create({
         email,
         name,
+        companyId,
         password:hasedPassword
     })
 }

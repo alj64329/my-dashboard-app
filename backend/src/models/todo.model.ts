@@ -15,7 +15,7 @@ const TodoSchema :Schema = new Schema({
     due:{type:Date, default:Date.now},
     status:{type:String, required:true},
     priority:{type:String, required:true},
-    companyId:{type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true}
+    userId:{type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
 },{
     timestamps:true
 })

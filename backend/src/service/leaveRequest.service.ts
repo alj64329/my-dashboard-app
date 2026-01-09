@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { ILeaveRequest, LeaveRequest } from "../models/leaveReq.model";
 
 //get all requests
@@ -37,8 +38,9 @@ const addLRequest = async(newRequest:Partial<ILeaveRequest>)=>{
     const status = "pending"
 
     return await LeaveRequest.create({
-        fromDate,
-        toDate,
+        fromDate:new Date(fromDate),
+        toDate: new Date(toDate),
+        leaveType,
         approvalStatus:status,
         userId,
         companyId

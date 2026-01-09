@@ -13,7 +13,7 @@ const TeamSchema: Schema = new Schema({
   userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   projectId: {type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true},
   projectRole:{type:String, required:true},
-  startDate:{type:Date, required:true},
+  startDate:{type:Date},
   endDate :{type:Date},
   state:{type:String, required:true}
 }, {

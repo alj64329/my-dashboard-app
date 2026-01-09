@@ -8,7 +8,7 @@ export interface ICompany extends Document{
 
 const CompanySchema :Schema = new Schema({
     company_name:{type:String, required:true},
-    company_code:{type:String, required:true, select:false},
+    company_code:{type:String, required:true},
     adminId:{type: mongoose.Schema.Types.ObjectId, ref: 'User', required:false}
 },{
     timestamps:true

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Project } from "../models/project.model";
 import { ITeam, Team } from "../models/team.model";
 
@@ -15,13 +16,13 @@ const getTeamById = async(id:string)=>{
 const addTeam = async(newTeam:Partial<ITeam>)=>{
     const {userId, projectId, projectRole, startDate, state} = newTeam
 
-    if(!userId||!projectId||!projectRole||!startDate ||!state) return
+    if(!userId||!projectId||!projectRole ||!state||!startDate) return
 
     return await Team.create({
-        userId,
-        projectId,
+        userId:new Types.ObjectId(userId),
+        projectId:new Types.ObjectId(projectId),
         projectRole,
-        startDate,
+        startDate: new Date(startDate),
         state
     })
 }
@@ -57,28 +58,27 @@ const getConsolidateProjList = async(companyId:string)=>{
     return await Team.aggregate([
         {
             $lookup:{
-                from:'Project',
+                from:'projects',
                 localField:'projectId',
                 foreignField:'_id',
-                as:'project'
+                as:'projects'
             }
         },
-        {$unwind:'$project'},
+        {$unwind:'$projects'},
         {
             $match:{
-                'project.companyId':companyId
+                'projects.companyId':new Types.ObjectId(companyId)
             }
         },
         {
             $lookup:{
-                from:'User',
+                from:'users',
                 localField:'userId',
                 foreignField:'_id',
-                as:'user'
+                as:'users'
             }
         },
-        { $unwind:'$user'},
-
+        { $unwind:'$users'},
     ])
 }
 
