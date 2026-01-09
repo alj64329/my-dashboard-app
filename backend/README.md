@@ -1,5 +1,12 @@
 ## Backend Routes
 
+- [Compnay Routes](#company-routes)
+- [User Routes](#user-routes)
+- [Project Routes](#project-routes)
+- [Team Routes](#team-routes)
+- [ExpenseRequest Routes](#expenserequest-routes)
+- [LeaveRequest Routes](#leaverequest-routes)
+- [Todo Routes](#todo-routes)
 
 ### Company Routes
 
