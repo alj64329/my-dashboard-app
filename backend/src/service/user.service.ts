@@ -20,7 +20,7 @@ const getByCompanyId = async(companyId:string)=>{
 
 //get user by email for login
 const getByEmail = async(email:string)=>{
-    return await User.findOne({email}).select('+password')
+    return await User.findOne({email}).select('+password').populate('companyId')
 }
 
 //create user

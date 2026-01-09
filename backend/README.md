@@ -29,7 +29,9 @@
 | GET | `/users/:id` | Get user by ID | |
 | GET | `/users/search?companyId=:companyId` | Find user by companyId | |
 | GET | `/users/search?email=:email` | Find user by email | |
-| POST | `/users/singup` | Create a user |`{name,companyId, email, password}`| 
+| POST | `/users/singup` | Create a user |`{name,companyId, email, password}`|
+| POST | `/users/login` | Loing and return user with company |`{email, password}`|
+| POST | `/users/checkAuth` | Check session ||
 | PUT | `/users/:id` | Update user |
 | DELETE | `/users/:id` | Delete user |
 ---
