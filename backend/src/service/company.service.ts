@@ -15,6 +15,30 @@ const getByCompanyId = async(companyId:string)=>{
     return await Company.findById(companyId)
 }
 
+//find a company by company_name and email
+const findCompanyBy = async(company_name:string, adminEmail:string)=>{
+    const company = await Company.aggregate([
+        {
+            $lookup:{
+                from:'users',
+                localField:'adminId',
+                foreignField:'_id',
+                as:'users'
+            }
+        },
+        {$unwind:'$users'},
+        {
+            $match:{
+                'users.email':adminEmail,
+                'company_name': company_name
+            }
+        }
+    ])
+
+    return company
+
+}
+
 //create comapnay
 const addCompany = async(newCompany:Partial<ICompany>)=>{
     const {company_name} = newCompany
@@ -48,5 +72,6 @@ export default{
     getByCompanyId,
     addCompany,
     updateComapny,
-    removeCompany
+    removeCompany,
+    findCompanyBy
 }

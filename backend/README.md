@@ -15,6 +15,7 @@
 | GET | `/companies` | Get all companies |
 | GET | `/companies/:id` | Get company by ID |
 | PUT | `/companies/search?company_code=:COMPANY_CODE` | Find Compnay by company_code |
+| PUT | `/companies/registered/search?company_name=:company_name&email=:email` | Find Compnay by name and admin email (space: %20) |
 | POST | `/companies` | Create a company|
 | PUT | `/companies/:id` | Update Compnay |
 | DELETE | `/companies/:id` | Delete company |

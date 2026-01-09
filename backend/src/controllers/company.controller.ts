@@ -95,11 +95,30 @@ const deleteCompanyById = async(req: Request<{id: string}>, res: Response) => {
 
 }
 
+//find matching company by company name and admin email
+const IsCompanyRegister = async(req:Request<{},{},{},{company_name:string, email:string}>, res:Response)=>{
+  const {company_name, email} = req.query
+
+  if(!company_name || !email){
+    return res.status(400).json({message:"Both company_name and email are required"})
+  }
+
+  try{
+    const company = await companyService.findCompanyBy(company_name, email)
+
+    // return matching company or null
+    res.status(200).json(company)
+  }catch(error){
+    res.status(500).json({message:"Server error"})
+  }
+}
+
 export default{
     getAllCompany,
     getCompanyById,
     getCompanyByCode,
     addCompany,
     updateCompanyById,
-    deleteCompanyById
+    deleteCompanyById,
+    IsCompanyRegister
 }
