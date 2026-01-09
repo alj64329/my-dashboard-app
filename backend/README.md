@@ -10,15 +10,15 @@
 
 ### Company Routes
 
-| Method | Endpoint | Description |
-|------|----------|------------|
-| GET | `/companies` | Get all companies |
-| GET | `/companies/:id` | Get company by ID |
-| PUT | `/companies/search?company_code=:COMPANY_CODE` | Find Compnay by company_code |
-| PUT | `/companies/registered/search?company_name=:company_name&email=:email` | Find Compnay by name and admin email (space: %20) |
-| POST | `/companies` | Create a company|
-| PUT | `/companies/:id` | Update Compnay |
-| DELETE | `/companies/:id` | Delete company |
+| Method | Endpoint | Description | Body |
+|------|----------|------------|------------|
+| GET | `/companies` | Get all companies | |
+| GET | `/companies/:id` | Get company by ID ||
+| PUT | `/companies/search?company_code=:COMPANY_CODE` | Find Compnay by company_code ||
+| PUT | `/companies/registered/search?company_name=:company_name&email=:email` | Find Compnay by name and admin email (space: %20) ||
+| POST | `/companies` | Create a company|`{company_name}`|
+| PUT | `/companies/:id` | Update Compnay | |
+| DELETE | `/companies/:id` | Delete company | |
 
 ---
 ### User Routes
@@ -29,9 +29,10 @@
 | GET | `/users/:id` | Get user by ID | |
 | GET | `/users/search?companyId=:companyId` | Find user by companyId | |
 | GET | `/users/search?email=:email` | Find user by email | |
-| POST | `/users/singup` | Create a user |`{name,companyId, email, password}`|
+| POST | `/users/singup` | Create a user |`{name,companyId, email, password, role}`|
 | POST | `/users/login` | Loing and set cookies with user associating company item |`{email, password}`|
 | POST | `/users/checkAuth` | Check session ||
+| GET | `/users/logout` | logout( clear cookies) ||
 | PUT | `/users/:id` | Update user |
 | DELETE | `/users/:id` | Delete user |
 ---

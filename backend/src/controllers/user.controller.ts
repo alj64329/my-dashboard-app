@@ -68,16 +68,16 @@ const getUserById = async(req:Request<{id:string}>,res:Response)=>{
 
 //create user -sign up
 const createUsers = async(req:Request<{},Partial<IUser>>, res:Response)=>{
-    const {email, password, name, companyId } = req.body
+    const {email, password, name, companyId, role } = req.body
 
     try{
-        if(!name||!email||!password ||!companyId){
+        if(!name||!email||!password ||!companyId ||!role){
             res.status(500).json({
                 message:"Missing information"
             })
             return
         }
-        const newUser = await userService.add({name,email, password, companyId})
+        const newUser = await userService.add({name,email, password, companyId, role})
 
         if(!newUser){
             res.status(500).json({message:"Unable to create user"})
