@@ -8,7 +8,7 @@
 | GET | `/companies` | Get all companies |
 | GET | `/companies/:id` | Get company by ID |
 | PUT | `/companies/search?company_code=:COMPANY_CODE` | Find Compnay by company_code |
-| PUT | `/companies` | Create a company|
+| POST | `/companies` | Create a company|
 | PUT | `/companies/:id` | Update Compnay |
 | DELETE | `/companies/:id` | Delete company |
 
