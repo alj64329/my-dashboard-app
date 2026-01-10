@@ -7,6 +7,7 @@
 - [ExpenseRequest Routes](#expenserequest-routes)
 - [LeaveRequest Routes](#leaverequest-routes)
 - [Todo Routes](#todo-routes)
+- [OTP ROutes](#otp-routes)
 
 ### Company Routes
 
@@ -29,7 +30,7 @@
 | GET | `/users/:id` | Get user by ID | |
 | GET | `/users/search?companyId=:companyId` | Find user by companyId | |
 | GET | `/users/search?email=:email` | Find user by email | |
-| POST | `/users/singup` | Create a user |`{name,companyId, email, password, role}`|
+| POST | `/users/signup` | Create a user |`{name,companyId, email, password, role}`|
 | POST | `/users/login` | Loing and set cookies with user associating company item |`{email, password}`|
 | POST | `/users/checkAuth` | Check session ||
 | GET | `/users/logout` | logout( clear cookies) ||
@@ -98,3 +99,10 @@
 | POST | `/todos` | Create a todo |` {title, userId,desc, status, priority, due }`| 
 | PUT | `/todos/:id` | Update todos |
 | DELETE | `/todos/:id` | Delete todos |
+---
+### OTP Routes
+
+| Method | Endpoint | Description | Body |
+|------|----------|------------|------------|
+| POST | `otp/generate-otp` | generate and send otp |`{email}`|
+| POST | `otp/verify-otp` | verify otp |`{email, otp}` |

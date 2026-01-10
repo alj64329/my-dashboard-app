@@ -11,6 +11,8 @@ import teamRouter from './routes/team.routes'
 import leaveReqRouter from './routes/leaveReq.routes'
 import expenseReqRouter from './routes/expenseReq.routes'
 import todoRouter from './routes/todo.routes'
+import { Redis } from '@upstash/redis'
+import otpRouter from './routes/otp.routes'
 
 dotenv.config()
 
@@ -36,6 +38,11 @@ app.use(cookieSession({
 
 app.use(express.json())
 
+export const redis = new Redis({
+  url:process.env.REDIS_URL,
+  token:process.env.UPSTASH_REDIS_REST_TOKEN
+})
+
 
 //Routes
 app.use("/users", userRouter)
@@ -45,6 +52,7 @@ app.use("/teams", teamRouter)
 app.use("/todos", todoRouter)
 app.use("/leave-requests", leaveReqRouter)
 app.use("/expense-requests", expenseReqRouter)
+app.use("/otp", otpRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Server is running")
