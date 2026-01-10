@@ -23,17 +23,7 @@ const sendOTP =async(req:Request<{},{},SendOTPBody>, res:Response)=>{
 
         //store otp in redis for 5 mins
         await redis.set(`otp:${email}`,hash,{ex:300})
-        console.log('EMAIL_USER:', process.env.EMAIL_USER)
-        console.log('GOOGLE_APP_PASS:', process.env.GOOGLE_APP_PASS ? 'LOADED' : 'MISSING')
 
-        // Test the transporter
-        transporter.verify((error, success) => {
-        if (error) {
-            console.error('Email transporter error:', error)
-        } else {
-            console.log('Email transporter is ready to send messages!')
-        }
-        })
         //send otp via email
         const result = await transporter.sendMail({
             from:process.env.EMAIL_USER,

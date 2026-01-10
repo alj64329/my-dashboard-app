@@ -7,7 +7,7 @@
 - [ExpenseRequest Routes](#expenserequest-routes)
 - [LeaveRequest Routes](#leaverequest-routes)
 - [Todo Routes](#todo-routes)
-- [OTP ROutes](#otp-routes)
+- [OTP Routes](#otp-routes)
 
 ### Company Routes
 
