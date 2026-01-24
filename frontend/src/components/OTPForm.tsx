@@ -45,9 +45,8 @@ const OTPForm = ({data, route}:OtpProps) => {
     
     const optHandler = async(otp:string)=>{
         if(!data) return
-        console.log(data)
-        const userId = data.appwriteId
-        const isVerified = otpVerification(userId, otp)
+
+        const isVerified = otpVerification(data.email, otp)
 
         if(!isVerified){
             setError("Invalid Code")
@@ -56,6 +55,7 @@ const OTPForm = ({data, route}:OtpProps) => {
         router.push(route)
 
     }
+    
   return (
     <form id="otp-form"
     className='mt-15'

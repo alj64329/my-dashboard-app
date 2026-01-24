@@ -15,7 +15,7 @@ import { useContext, useRef, useState } from "react"
 
 const ProfileSheet = ({open, setProfileOpen}:ProfileSheetProps) => {
     const userInfo = useContext(UserContext)
-    const userPic = userInfo?.user?.profilePic
+    const userPic = userInfo?.loggedInUser?.profilePic
     const fileInputRef = useRef<HTMLInputElement>(null)
 
   return (

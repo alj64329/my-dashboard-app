@@ -11,7 +11,7 @@ import { useContext } from "react"
 
 const page = () => {
   const userInfo= useContext(UserContext)
-  const role = userInfo?.user?.role
+  const role = userInfo?.loggedInUser?.role
 
   return (
     <div className='flex justify-between'>

@@ -39,7 +39,7 @@ app.use(cookieSession({
 app.use(express.json())
 
 export const redis = new Redis({
-  url:process.env.REDIS_URL,
+  url:process.env.UPSTASH_REDIS_REST_URL,
   token:process.env.UPSTASH_REDIS_REST_TOKEN
 })
 

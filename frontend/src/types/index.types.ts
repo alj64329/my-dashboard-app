@@ -1,8 +1,4 @@
-export type AuthFormprops ={
-    h2Title:string,
-    authFormType:  "signup-step1"|"signup-step2"|"login",
-    data?:AdminData| EmployeeData
-}
+import { ApprovalStatus, LeaveType } from "./service.types"
 
 export type OtpProps={
     data: AdminData|EmployeeData|undefined,
@@ -10,26 +6,23 @@ export type OtpProps={
 }
 
 export type AdminData={
-    role:"admin",
-    company:string,
+    role:Role.admin,
+    company_name:string,
     name:string,
     email:string
-    appwriteId:string
 }
 
 export type EmployeeData ={
-    role:"employee",
+    role:Role.employee,
     name:string,
     email:string,
     companyId:string,
-    appwriteId:string
 }
 
 export interface Company{
-    companyId: string,
-    companyName:string,
-    companyCode:string
-
+    _Id: string,
+    company_name:string,
+    company_code:string,
 }
 export enum Role{
     admin="admin",
@@ -38,12 +31,14 @@ export enum Role{
 }
 
 export interface User{
-    rowId:string,
+    _id:string,
     name:string,
     email:string,
     companyId:string,
     role: Role
-    appwriteId:string
+    position:string,
+    password:string,
+    profilePic:string
 }
 
 export enum Status{
@@ -53,13 +48,39 @@ export enum Status{
 }
 
 export interface Project{
-    projId: string,
+    _id: string,
     companyId: string,
-    managerId:string,
-    member:string[],//array of empIds
-    projName:string,
-    desc:string,
-    startData:Date,
+    status:string
+}
+
+export interface Team{
+    _id:string,
+    userId:string,
+    projectId:string,
+    startDate:Date,
     endDate:Date,
-    status: Status
+    state:string
+}
+
+export interface LeaveReq{
+    _id: string,
+    userId: string,
+    companyId:string,
+    fromDate: Date,
+    toDate:Date,
+    leaveType: LeaveType,
+    approvalStatus:ApprovalStatus
+}
+
+//appwrite expense_request
+export interface ExpenseReq{
+    _id:string,
+    userId:string,
+    companyId:string,
+    title:string,
+    amount:number,
+    category:string,
+    desc:string,
+    receipt:string,
+    approvalStatus: ApprovalStatus
 }

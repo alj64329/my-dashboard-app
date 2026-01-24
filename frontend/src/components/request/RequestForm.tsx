@@ -7,9 +7,10 @@ import { category, leaveTypes } from '@/src/constants/requestForm.constants';
 import { ApprovalStatus, LeaveType } from '@/src/types/service.types';
 import { ReceiptIcon } from 'lucide-react';
 import { Bounce, toast, ToastContainer } from 'react-toastify';
-import { ExpenseReq, LeaveReq } from '@/src/types/appwriteDb.types';
+
 import { createExpenseRequest } from '@/src/features/request/expenseRequest.features';
 import { createLeaveRequest } from '@/src/features/request/leaveRequest.features';
+import { ExpenseReq, LeaveReq } from '@/src/types/index.types';
 
 type Props = {
     formType:"expense" |"leave"
@@ -32,8 +33,8 @@ const RequestForm = ({formType}: Props) => {
     const userInfo = useContext(UserContext)
 
     //deconstruct to get just ids from userInfo
-    const userId = userInfo?.user?.$id
-    const companyId = userInfo?.user?.companyId
+    const userId = userInfo?.loggedInUser?._id
+    const companyId = userInfo?.loggedInUser?.companyId._Id
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
     const [expenseFormData, setExpenseFormData] = useState<ExpenseFormData>({
         title:"",
@@ -98,7 +99,7 @@ const RequestForm = ({formType}: Props) => {
             }
             console.log(expenseFormData)
             //POST request to appwrite endpoint
-            const request:Omit<ExpenseReq,'rowId'> ={
+            const request:Partial<ExpenseReq> ={
                 userId,
                 companyId,
                 title,
@@ -154,11 +155,11 @@ const RequestForm = ({formType}: Props) => {
                 return
             }
 
-            const request:Omit<LeaveReq,'rowId'> ={
+            const request:Partial<LeaveReq> ={
                 userId,
                 companyId,
-                startDate,
-                endDate,
+                fromDate:startDate,
+                toDate:endDate,
                 leaveType,
                 approvalStatus: ApprovalStatus.pending
             }

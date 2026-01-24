@@ -9,7 +9,7 @@ const page = () => {
     useState<AdminData | EmployeeData | undefined>(undefined)
 
     useEffect(()=>{
-    const stored =localStorage.getItem("registrationData")
+    const stored =sessionStorage.getItem("registrationData")
     if(stored){
         setRegistrationData(JSON.parse(stored))
     }

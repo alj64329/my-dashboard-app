@@ -1,9 +1,11 @@
 "use client"
 
-import { findCompany, sendOTP } from '@/src/features/auth/auth.features'
+import { UserContext } from '@/src/context/UserContext'
+import { findCompany } from '@/src/features/auth/auth.features'
+import { Role } from '@/src/types/index.types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 const page = () => {
   const router = useRouter()
@@ -11,6 +13,7 @@ const page = () => {
   const [email, setEmail] = useState("")
   const [code, setCode] = useState("")
   const [error, setError] = useState("")
+  const userInfo = useContext(UserContext)
 
   const handleNext = async (e: React.FormEvent)=>{
       e.preventDefault()
@@ -23,21 +26,22 @@ const page = () => {
         return
       }
 
-      const companyId = company[0].$id
+    const companyId = company._id
 
-      //send OTP code to see if email exist
-      const temp = await sendOTP(email)
+    //   //send OTP code to see if email exist
+    //   const temp = await sendOTP(email)
 
-      if(!temp) return
+    //   if(!temp) return
 
-      const appwriteId = temp.userId
-        //store company name and email in localStorage
-        localStorage.setItem(
-            "registrationData",
-            JSON.stringify({companyId, appwriteId, email, name, "role":"employee"})
-        )
+    //   const appwriteId = temp.userId
+    //store company name and email in sessionStorage
+    sessionStorage.setItem(
+        "registrationData",
+        JSON.stringify({companyId, email, name, role:Role.employee})
+    )
 
-      router.push("/user-signup/step2")
+    //   router.push("/user-signup/step2")
+    router.push("/user-signup/step3")
   }
   return (
       <div className="bg-grey-25 min-h-screen">

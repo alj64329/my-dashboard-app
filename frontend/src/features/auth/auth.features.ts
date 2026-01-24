@@ -8,17 +8,18 @@ const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
 const COMPANY_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_COMPANY_TABLE_ID as string
 const USER_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_USER_TABLE_ID as string
 
+const BACKEND_ENDPOINT = process.env.NEXT_PUBLIC_BACKEND_ENDOPOINT as string
+
 //Check if the company exist in table or not
 export const companyExist = async (comapnyName:string, adminEmail:string)=>{
+    const encodeName = encodeURIComponent(comapnyName)
     try{
-        const res = await tableDB.listRows({
-            databaseId: DATABASE_ID,
-            tableId: COMPANY_TABLE_ID,
-            queries:[
-                Query.equal("company_name",comapnyName)
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/companies/registered/search?company_name=${encodeName}:&email=:${adminEmail}`,{
+            method:"GET"
         })
-       if(res.rows.length===0){
+        const data = await res.json() as []
+
+       if(data.length === 0){
         return false
        }
        return true
@@ -28,64 +29,122 @@ export const companyExist = async (comapnyName:string, adminEmail:string)=>{
 }
 
 //send one time password to email address
-export const sendOTP = async(email:string)=>{
+export const sendOTP = async(email:string):Promise<boolean>=>{
     try{
-        const sessionToken = await account.createEmailToken({
-            userId:ID.unique(),
-            email:email
+        const res = await fetch(`${BACKEND_ENDPOINT}/otp/generate-otp`,{
+            method:"POST",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                email
+            }),
         })
-        console.log(sessionToken)
-        return sessionToken
+
+        const data = await res.json()
+        return true
     }catch(err){
         console.log(err)
+        return false
     }
 }
 
-//verify the one time password
-export const otpVerification= async(userId:string, secret:string)=>{
+// //verify the one time password
+export const otpVerification= async(email:string, otp:string)=>{
     try{
-        const session = await account.createSession({
-            userId:userId,
-            secret:secret
+        const res = await fetch(`${BACKEND_ENDPOINT}/otp/verify-otp`,{
+            method:"POST",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                email,
+                otp
+            }),
         })
 
-        if(!session) return false
-        console.log(session)
+        const data = await res.json()
+
+        if(!res.ok){
+            return console.log('Something went wrong')
+        }
         return true
     }catch(err){
         console.log(err)
     }
 }
 
-//create comapny row in table
-export const registerCompany = async (companyName:string, adminEmail:string, adminAppwriteId:string)=>{
+//create comapny
+export const registerCompany = async (company_name:string)=>{
     try{
-        const code = nanoid(10)
-        const company = await tableDB.createRow({
-            databaseId: DATABASE_ID,
-            tableId: COMPANY_TABLE_ID,
-            rowId:ID.unique(),
-            data:{
-                company_name:companyName,
-                company_code: code,
-                adminEmail:adminEmail,
-                adminAppwriteId:adminAppwriteId
-            }
+
+        const res = await fetch(`${BACKEND_ENDPOINT}/companies`,{
+            method:"POST",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                company_name,
+            }),
         })
 
+        const data = await res.json()
+        console.log(data)
+
+        if(!res.ok){
+            return console.log('Something went wrong')
+        }
+
         console.log("Company is successfully registered")
-        return company
+        return data
     }catch(err){
         console.log(err)
     }
 }
 
-//update auth password
-export const updateAccount = async (password:string)=>{
+//update company with adminId
+export const assignAdmin = async(companyId:string,adminId:string)=>{
     try{
-         const updates = await account.updatePassword({
-            password
+        const res = await fetch(`${BACKEND_ENDPOINT}/companies/${companyId}`,{
+            method:"PUT",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                adminId,
+            }),
         })
+
+        if(!res.ok){
+            return console.log("Error occur in assigning admin to company")
+        }
+        const data = await res.json()
+        return data
+    }catch(err){
+        console.error(err)
+    }
+}
+
+//update auth password
+export const updateAccount = async (userId:string, newData:Partial<User>)=>{
+    try{
+         const res = await fetch(`${BACKEND_ENDPOINT}/${userId}`,{
+            method:"PUT",
+            headers:{
+               "Content-type" :"application/json",
+            },
+            body: JSON.stringify({
+                newData
+            }),
+         })
+
+         if(!res.ok){
+            console.log("error in update")
+            return
+         }
+
+        const data = await res.json()
+        console.log(data)
         console.log("Password successfully updated")
         return true
     }catch(err){
@@ -96,12 +155,25 @@ export const updateAccount = async (password:string)=>{
 
 export const login= async(email:string, password:string)=>{
     try{
-        await account.createEmailPasswordSession({
-            email,
-            password
+        const res = await fetch(`${BACKEND_ENDPOINT}/users/login`,{
+            method:"POST",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                email,
+                password
+            }),
+            credentials:"include"
         })
-        const loggedInUser = await account.get()
-        if(!loggedInUser) return false
+
+        const data = await res.json()
+
+        if(!res.ok){
+            return false
+        }
+
+        const loggedInUser = data.user
         return loggedInUser
 
     }catch(err){
@@ -110,41 +182,47 @@ export const login= async(email:string, password:string)=>{
     }
 }
 
-//add user row in user table
-export const registerUser = async ({name, email, companyId, role, appwriteId}:Omit<User, 'rowId'>)=>{
+//add user 
+export const registerUser = async ({name, email, companyId, role, password}:Partial<User>)=>{
     try{
-        const res = await tableDB.createRow({
-            databaseId: DATABASE_ID,
-            tableId: USER_TABLE_ID,
-            rowId:ID.unique(),
-            data:{
-                name,
+        const res = await fetch(`${BACKEND_ENDPOINT}/users/signup`,{
+            method:"POST",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
                 email,
+                password,
                 companyId,
                 role,
-                appwriteId
-            }
+                name
+            }),
         })
+
+        if(!res.ok){
+            console.log("Error in registerUser")
+            return
+        }
+        const data = await res.json()
         console.log("User is successfully registered")
-        return res
+        return data
     }catch(err){
         console.log(err)
     }
 }
 
-export const findCompany = async(companyCode:string)=>{
+export const findCompany = async(company_code:string)=>{
     try{
-        const company = await tableDB.listRows({
-            databaseId: DATABASE_ID,
-            tableId: COMPANY_TABLE_ID,
-            queries:[
-                Query.equal("company_code",companyCode)
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/companies/search?company_code=${company_code}`,{
+            method:"GET"
         })
-       if(company.rows.length===0){
+
+        const data = await res.json()
+        console.log(data)
+       if(!res.ok){
         return false
        }
-       return company.rows
+       return data
     }catch(err){
         console.log(err)
     }
@@ -153,9 +231,16 @@ export const findCompany = async(companyCode:string)=>{
 //Log out
 export const logout = async()=>{
     try{
-        await account.deleteSession({
-            sessionId:'current'
+        const res = await fetch(`${BACKEND_ENDPOINT}users/logout`,{
+            credentials:"include"
         })
+
+        if(!res.ok){
+            console.log("Error in logout")
+            return
+        }
+
+        return
 
     }catch(err){
         if(err instanceof AppwriteException){

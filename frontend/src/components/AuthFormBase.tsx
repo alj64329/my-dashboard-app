@@ -1,19 +1,24 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
-import { AuthFormprops, Role, User } from '../types/index.types'
+import { AdminData, EmployeeData, Role, User } from '../types/index.types'
 import { useRouter } from 'next/navigation'
 import { validatePassword } from '../utils/validatePassword'
-import { login, registerCompany, registerUser, updateAccount } from '../features/auth/auth.features'
-import { getCompany, getUser } from '../utils/dashboad'
-import { CompanyRow, UserRow } from '../types/usercontent.types'
+import { assignAdmin, login, registerCompany, registerUser, updateAccount } from '../features/auth/auth.features'
 import { UserContext } from '../context/UserContext'
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Bounce, toast, ToastContainer } from 'react-toastify'
+import { log } from 'console'
 
+export type AuthFormprops ={
+    h2Title:string,
+    authFormType:  "signup-step1"|"signup-step2"|"login",
+    data?:AdminData| EmployeeData
+}
 
 const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const router = useRouter()
     const userInfo = useContext(UserContext)
+    // sign up useState
     const [password1, setPassword1] =useState("")
     const [password2, setPassword2] =useState("")
     const [message1, setMessage1] = useState("")
@@ -23,13 +28,14 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [passwordShow, setPasswordShow]= useState(false)
+    const [password2Show, setPassword2Show]= useState(false)
 
     //initialize dashboard route
     let dashboardRoute :string
     
-
     //data parameter is neeed to sign up company
     const handleSignup =async(e:React.FormEvent)=>{
+        console.log(data)
         e.preventDefault()
         //password check
         //if one of them is empty
@@ -41,42 +47,75 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         if(!data ){
             return
         }
-        let companyId =""
+
+        let companyId:string =""
+        let newUser:Partial<User>
+        let user
+
         if(data.role==="admin"){    
             dashboardRoute = "/admin"
-            //create company account
-           const company= await registerCompany(data.company, data.email, data.appwriteId) as CompanyRow
-           if(!company) return
+            
+            //create company account with only company name
+            const company= await registerCompany(data.company_name)
+            
+            if(!company) return
 
-           userInfo?.setCompany(company)
-           companyId = company.$id
-        }
-        if(data.role==="employee"){   
+            companyId = company._id
+
+            newUser={
+                name:data.name,
+                role:data.role,
+                email:data.email,
+                password:password1,
+                companyId,
+            }
+            //create admin user
+            user = await registerUser(newUser)
+            
+            if(!user){
+                console.error("Error creating users")
+                return
+            }
+            // userInfo?.setUser(user)
+            //update company with admin userId
+            const adminId = user._id
+
+            const updatedCompany = await assignAdmin(companyId,adminId)
+
+            if(!updatedCompany){
+                console.log("Error occur while updating")
+                return
+            }
+            // userInfo?.setCompany(updatedCompany)
+
+        }else if(data.role==="employee"){   
             dashboardRoute ="/employee" 
-           companyId = data.companyId
+
+            newUser={
+                name:data.name,
+                email:data.email,
+                companyId: data.companyId,
+                role: data.role,
+                password: password1
+            }
+
+           //register user
+           user = await registerUser(newUser)
+        //    userInfo?.setUser(user)
+
         }
-        //account create in Auth
-        const isAccountUpdated = await updateAccount(password1)
-        if(!isAccountUpdated) {
-        setError("Somethig went wrong")
-        return
+
+
+        //login
+        const loggedInUser = await login(data.email,password1)
+        console.log(loggedInUser)
+
+        if(!loggedInUser){
+            console.log("Error occur when loggin in")
         }
+
+        userInfo?.handleSetLoggedInUser(loggedInUser)
         
-        if(!companyId) return
-
-        //create user in user table
-        const newUser :Omit<User, 'rowId'> ={
-        name: data.name,
-        email:data.email,
-        companyId,
-        role: data.role==="admin"?Role.admin:Role.employee,
-        appwriteId: data.appwriteId
-        }
-
-        const response = await registerUser(newUser) as UserRow
-        userInfo?.setUser(response)
-        //set cookies
-        setCookieSession(newUser.role)
 
         //toaster
         toast.success('Successfully logged in. You are directing to Dashboard page', {
@@ -91,8 +130,11 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
             transition: Bounce,
         })
 
-        //direct to dashboard
-        router.replace(dashboardRoute)
+        //claer sessionStorage
+        sessionStorage.clear()
+
+        // //direct to dashboard
+        // router.replace(dashboardRoute)
     }
 
     useEffect(()=>{
@@ -109,6 +151,7 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         }
     },[password2])
 
+    //login
     const loginHandler= async(e:React.FormEvent)=>{
         e.preventDefault()
 
@@ -119,22 +162,8 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
             return
         }
 
-        //update loggedin User, user and company
-        userInfo?.setLoggedInUser(user)
-        const userId = user.$id
-        const userRow = await getUser(userId) as UserRow[]
-        const userRow0 = userRow[0]
-
-        userInfo?.setUser(userRow0)
-        const role = userRow0.role as Role
-        const companyId = userRow0.companyId
-
-        const company = await getCompany(companyId) as CompanyRow
-        userInfo?.setCompany(company)
-        dashboardRoute = role === Role.admin?"/admin":"/employee"
-
-        console.log("user successfully login")
-        await setCookieSession(role)
+        //set logged in user with company detail
+        userInfo?.handleSetLoggedInUser(user)
 
         //toaster
         toast.success('Successfully logged in. You are directing to Dashboard page', {
@@ -150,13 +179,6 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
             })
         //User logged in direct to dashboard
         router.push(dashboardRoute)
-    }
-    const setCookieSession = async(role:Role)=>{
-        await fetch('/api/auth/set-session',{
-            method: 'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({role})
-        })
     }
 
     const handleChange = (e:MouseEvent)=>{
@@ -188,23 +210,50 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
                         </ul>
                     </div>
                     <div className='flex flex-col gap-2'>
+
                         <label htmlFor="">Create a password</label>
-                        <input type="password" name="password1" id="password1" 
-                        placeholder="Enter your password"
-                        value={password1}
-                        onChange={(e)=>setPassword1(e.target.value)}
-                        className="auth-form-input w-[250px]" />
+                        <div className='flex items-center auth-form-input w-[250px]'>
+                            <input  type={passwordShow?"text":"password"}
+                            name="password1" id="password1" 
+                            placeholder="Enter your password"
+                            value={password1}
+                            onChange={(e)=>setPassword1(e.target.value)}
+                            className="w-[90%] focus:outline-none focus:ring-0" />
+                            <span
+                            className='text-[22px] text-grey-200'>
+                                {
+                                    passwordShow?
+                                    <RiEyeCloseLine
+                                    onClick={()=>setPasswordShow(false)}/>:
+                                    <RiEyeLine
+                                    onClick={()=>setPasswordShow(true)}/>
+                                }
+                            </span>
+                        </div>
                         <div className='text-sm text-red-800'>
                             {message1?message1:""}
                         </div>
                     </div>
                     <div className='flex flex-col gap-2'>
                         <label htmlFor="">Confirm password</label>
-                        <input type="password" name="password2" id="password2" 
-                        placeholder="Confirm your password"
-                        value={password2}
-                        onChange={(e)=>setPassword2(e.target.value)}
-                        className="auth-form-input w-[250px]" />
+                         <div className='flex items-center auth-form-input w-[250px]'>
+                            <input type={password2Show?"text":"password"}
+                            name="password2" id="password2" 
+                            placeholder="Confirm your password"
+                            value={password2}
+                            onChange={(e)=>setPassword2(e.target.value)}
+                            className="w-[90%] focus:outline-none focus:ring-0" />
+                                <span
+                                className='text-[22px] text-grey-200'>
+                                    {
+                                        password2Show?
+                                        <RiEyeCloseLine
+                                        onClick={()=>setPassword2Show(false)}/>:
+                                        <RiEyeLine
+                                        onClick={()=>setPassword2Show(true)}/>
+                                    }
+                                </span>
+                        </div>
                         <div className='text-sm text-red-800'>
                             {message2?message2:""}
                         </div>

@@ -17,14 +17,14 @@ const layout = ({children}:{children:React.ReactNode}) => {
   const userInfo= useContext(UserContext)
   const router = useRouter()
   const loggedInUser = userInfo?.loggedInUser
-  const role = userInfo?.user?.role
+  const role = loggedInUser?.role
   const [open, setOpen] = useState(false)
   
-  // useEffect(()=>{
-  //   if(!loggedInUser){
-  //     router.push('/')
-  //   }
-  // },[loggedInUser])
+  useEffect(()=>{
+    if(!loggedInUser){
+      router.push('/')
+    }
+  },[loggedInUser])
 
   return (
     <div className='flex flex-col md:flex-row'>

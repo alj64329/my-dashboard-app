@@ -30,7 +30,7 @@ const page = () => {
     setModalData(data)
   }
 
-  const company = userInfo?.company
+  const company = userInfo?.loggedInUser?.companyId
   const companyName = company?.company_name
   
   useEffect(()=>{

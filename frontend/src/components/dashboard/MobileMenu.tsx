@@ -15,10 +15,10 @@ type Props={
 const MobileMenu = ({onClose}:Props) => {
   const userInfo= useContext(UserContext)
   if(!userInfo) return
-  const setLoggedInUser = userInfo.setLoggedInUser as React.Dispatch<React.SetStateAction<Models.User<any> | null>>
+  const setLoggedInUser = userInfo.handleSetLoggedInUser 
   const router = useRouter()
-  const companyName = userInfo?.company?.company_name
-  const role = userInfo?.user?.role
+  const companyName = userInfo?.loggedInUser?.companyId.company_name
+  const role = userInfo?.loggedInUser?.role
 
     const useLogout = async()=>{
     //log out from Appwrite

@@ -7,8 +7,8 @@ import { defaultUser } from '@/src/constants/default.constants'
 const UserCard = () => {
     const userInfo = useContext(UserContext)
 
-    const username = userInfo?.user?.name
-    const userPic = userInfo?.user?.profilePic
+    const username = userInfo?.loggedInUser?.name
+    const userPic = userInfo?.loggedInUser?.profilePic
 
   return (
     <div className="box-shadow h-fit mt-6 md:mt-0 rounded-2xl hidden md:block">

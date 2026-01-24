@@ -10,7 +10,7 @@ import MobileMenu from './MobileMenu'
 
 const DashboardHead = ({setProfileOpen}:ProfileSheetProps) => {
   const userInfo= useContext(UserContext)
-  const userPic= userInfo?.user?.profilePic
+  const userPic= userInfo?.loggedInUser?.profilePic
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const menuOnClose =()=>{

@@ -1,30 +1,19 @@
-import { Models, Role } from "appwrite"
 import { Page } from "./dashboard.types"
+import { Company, Role } from "./index.types"
 
 export interface UserContentType{
-    loggedInUser:Models.User<any> |null,
-    setLoggedInUser: React.Dispatch<React.SetStateAction<Models.User<any> | null>>,
-    user:UserRow |null
-    setUser: React.Dispatch<React.SetStateAction<UserRow|null>>
-    company: CompanyRow | null,
-    setCompany: React.Dispatch<React.SetStateAction<CompanyRow|null>>
+    loggedInUser:LoggedInUser |null,
+    handleSetLoggedInUser: (user:LoggedInUser|null)=>void,
     page:Page,
-    setPage:React.Dispatch<React.SetStateAction<Page>>
+    handleSetPage:(newpage:Page)=>void
 }
 
-export interface UserRow extends Models.DefaultRow{
+export interface LoggedInUser{
+    _id:string
     name:string,
     email:string,
-    companyId: string,
+    companyId:Company,
     role: Role,
-    appwriteId:string,
     position:string,
     profilePic:string
-}
-
-export interface CompanyRow extends Models.DefaultRow{
-    "company_name":string,
-    "company_code": string,
-    adminEmail: string,
-    adminAppwriteId:string
 }

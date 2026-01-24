@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/dialog"
 import { PendingTableExpense, PendingTableLeave } from "./dashboard/admin/AdminTable"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { APTUser } from "../types/appwriteDb.types"
 import { RequestType } from "../types/dashboard.types"
+import { User } from "../types/index.types"
 
 type Props = {
   isOpen:boolean,
@@ -30,8 +30,8 @@ type Props = {
       type:"leave",
       data:PendingTableLeave
     }| null,
-  employee?:APTUser |null,
-  onUpdate?:(updatedEmp:APTUser)=> void,
+  employee?:User |null,
+  onUpdate?:(updatedEmp:User)=> void,
 
   FormComponent?:React.ComponentType<{formType:RequestType}>,
   formType?:RequestType

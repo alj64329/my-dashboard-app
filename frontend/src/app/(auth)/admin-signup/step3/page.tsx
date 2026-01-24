@@ -10,7 +10,7 @@ const page = () => {
 
 
   useEffect(()=>{
-    const stored =localStorage.getItem("registrationData")
+    const stored =sessionStorage.getItem("registrationData")
     if(stored){
       setRegistrationData(JSON.parse(stored))
     }

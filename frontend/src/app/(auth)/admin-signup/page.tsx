@@ -1,6 +1,7 @@
 "use client"
 
 import { companyExist, sendOTP } from "@/src/features/auth/auth.features"
+import { Role } from "@/src/types/index.types"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -8,7 +9,7 @@ import { useState } from "react"
 
  
 const signup = () => {
-    const [company, setCompany] = useState("")
+    const [companyName, setCompanyName] = useState("")
     const [email, setEmail] = useState("") 
     const [name, setName] = useState("")
     const [error, setError] = useState("")
@@ -16,21 +17,24 @@ const signup = () => {
 
     const handleNext = async (e: React.FormEvent)=>{
         e.preventDefault()
-        const isCompanyRegister = await companyExist(company, email)
+        const isCompanyRegister = await companyExist(companyName, email)
 
         if(isCompanyRegister){
-            setError("Company name exist in our database.")
+            setError("Company exists in our database.")
             return
         }
         const temp = await sendOTP(email)
 
         if(!temp) return
 
-        const appwriteId = temp.userId
         //store company name and email in localStorage
-        localStorage.setItem(
+        sessionStorage.setItem(
             "registrationData",
-            JSON.stringify({company, appwriteId, email, name, "role":"admin"})
+            JSON.stringify({
+                company_name:companyName, 
+                email, 
+                name, 
+                role:Role.admin})
         )
 
         router.push("/admin-signup/step2")
@@ -55,8 +59,8 @@ const signup = () => {
                onSubmit={handleNext}>
                 <input type="text" name="companyName" id="companyName" 
                 placeholder="Enter your company name"
-                value={company}
-                onChange={e=>setCompany(e.target.value)}
+                value={companyName}
+                onChange={e=>setCompanyName(e.target.value)}
                 className="auth-form-input w-full" />
 
                 <input type="email" name="adminEmail" id="adimnEmail" 
