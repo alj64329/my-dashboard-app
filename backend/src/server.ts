@@ -38,6 +38,11 @@ app.use(cookieSession({
 
 app.use(express.json())
 
+console.log("OTP ENV CHECK", {
+  redisUrl: !!process.env.UPSTASH_REDIS_REST_URL,
+  redisToken: !!process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
 export const redis = new Redis({
   url:process.env.UPSTASH_REDIS_REST_URL,
   token:process.env.UPSTASH_REDIS_REST_TOKEN
