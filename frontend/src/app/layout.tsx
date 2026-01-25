@@ -4,7 +4,6 @@ import { Karla, Kumbh_Sans, Nunito_Sans } from 'next/font/google'
 import { UserProvider } from "../context/UserContext";
 import {config} from "@fortawesome/fontawesome-svg-core"
 import '@fortawesome/fontawesome-svg-core/styles.css'
-import AutoLogout from "../components/AutoLogout";
 import { ToastContainer } from "react-toastify";
 config.autoAddCss= false
 
@@ -48,7 +47,6 @@ export default function RootLayout({
         <ToastContainer />
           {children}
         </UserProvider>
-        <AutoLogout/>
       </body>
     </html>
   );
