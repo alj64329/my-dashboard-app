@@ -1,29 +1,24 @@
-import { Query } from "appwrite"
-import { tableDB } from "../lib/appwrite"
-import { APTUser } from "../types/appwriteDb.types"
+import { User } from "../types/index.types"
 
-const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
-const EMPLOYEE_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_EMPLOYEE_TABLE_ID as string
+
+const BACKEND_ENDPOINT = `${process.env.NEXT_PUBLIC_BACKEND_ENDOPOINT}/users`
 
 //update users
-export const modifyUsers = async (data:APTUser)=>{
+export const modifyUsers = async (userId:string,updates:Partial<User>)=>{
     try{
-        const user = await tableDB.updateRow({
-            databaseId: DATABASE_ID,
-            tableId: EMPLOYEE_TABLE_ID,
-            rowId:data.rowId,
-            data:{
-                name:data.name,
-                email:data.email,
-                companyId:data.companyId,
-                role:data.role,
-                appwriteId:data.appwriteId,
-                position:data.position,
-                profilePic:data.profilePic
-            }
+        const res = await fetch(`${BACKEND_ENDPOINT}/${userId}`,{
+            method:"PUT",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                updates
+            }),
         })
 
-        return user
+        const data = await res.json()
+
+        return data
     }catch(err){
         console.log(err)
     }
@@ -32,14 +27,14 @@ export const modifyUsers = async (data:APTUser)=>{
 //delete users
 export const deleteEmployee = async (userId:string)=>{
     try{
-        const deletedUser = await tableDB.deleteRow({
-            databaseId: DATABASE_ID,
-            tableId: EMPLOYEE_TABLE_ID,
-            rowId:userId,
+        const res = await fetch(`${BACKEND_ENDPOINT}/${userId}`,{
+            method:"DELETE"
         })
 
-        console.log(`${deletedUser} has been deleted form comapny`)
-        return deleteEmployee
+        const data = await res.json()
+
+        console.log(`${data} has been deleted form comapny`)
+        return data
     }catch(err){
         console.log(err)
     }
@@ -48,15 +43,13 @@ export const deleteEmployee = async (userId:string)=>{
 //list users by company Id
 export const listUsersByCompany = async(companyId:string)=>{
     try{
-        const users = tableDB.listRows({
-            databaseId:DATABASE_ID,
-            tableId:EMPLOYEE_TABLE_ID,
-            queries:[
-                Query.equal('companyId', companyId)
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/search?companyId=${companyId}`,{
+            method:"GET"
         })
 
-        return users
+        const data = await res.json()
+
+        return data
     }catch(err){
         console.log(err)
     }

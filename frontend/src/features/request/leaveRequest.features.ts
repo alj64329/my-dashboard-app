@@ -1,52 +1,45 @@
-import { ID, tableDB } from "@/src/lib/appwrite"
-import { LeaveReq } from "@/src/types/appwriteDb.types"
-import { Query } from "appwrite"
+import { LeaveReq } from "@/src/types/index.types"
 
-const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
-const LEAVEREQUEST_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_LEAVEREQUEST_TABLE_ID as string
+const BACKEND_ENDPOINT = `${process.env.NEXT_PUBLIC_BACKEND_ENDOPOINT}/leave-requests`
 
 //create row
-export const createLeaveRequest = async(data:Omit<LeaveReq,'rowId'>)=>{
+export const createLeaveRequest = async(request:Partial<LeaveReq>)=>{
         try{
-            const leaveRequest = await tableDB.createRow({
-                databaseId: DATABASE_ID,
-                tableId: LEAVEREQUEST_TABLE_ID,
-                rowId:ID.unique(),
-                data:{
-                    userId:data.userId,
-                    companyId:data.companyId,
-                    startDate:data.startDate,
-                    endDate:data.endDate,
-                    leaveType:data.leaveType,
-                    approvalStatus:data.approvalStatus
-                }
+            const res = await fetch(`${BACKEND_ENDPOINT}`,{
+                method:"POST",
+                headers:{
+                    "Content-type" :"application/json",
+                },
+                body:JSON.stringify({
+                    request
+                }),
             })
+
+            const data = await res.json()
     
             console.log("Leave request has been created")
-            return leaveRequest
+            return data
         }catch(err){
             console.log(err)
         }
 }
 
 //modify the request
-export const modifyRequest = async (data:LeaveReq)=>{
+export const modifyRequest = async (requestId:string,update:LeaveReq)=>{
     try{
-        const leaveRequest = await tableDB.updateRow({
-            databaseId: DATABASE_ID,
-            tableId: LEAVEREQUEST_TABLE_ID,
-            rowId:data.rowId,
-            data:{
-                userId:data.userId,
-                companyId:data.companyId,
-                startDate:data.startDate,
-                endDate:data.endDate,
-                leaveType:data.leaveType,
-                approvalStatus:data.approvalStatus
-            }
+        const res = await fetch(`${BACKEND_ENDPOINT}/${requestId}`,{
+            method:"PUT",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                update
+            }),
         })
 
-        return leaveRequest
+        const data = await res.json()
+
+        return data
     }catch(err){
         console.log(err)
     }
@@ -56,18 +49,12 @@ export const modifyRequest = async (data:LeaveReq)=>{
 export const listLeaveRequests = async(companyId:string)=>{
     try{
         //get all leaveRequests
-        const leaveRequestsRes = await tableDB.listRows({
-            databaseId:DATABASE_ID,
-            tableId:LEAVEREQUEST_TABLE_ID,
-            queries:[
-                Query.equal('companyId', companyId)
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/search?companyId=${companyId}`,{
+            method:"GET"
         })
 
-        const leaveRequests = leaveRequestsRes.rows
-
-
-        return leaveRequests
+        const data = await res.json()
+        return data
     }catch(err){
         console.log(err)
     }
@@ -76,17 +63,12 @@ export const listLeaveRequests = async(companyId:string)=>{
 //get pending request in a comapny
 export const listPendingLeaveRequests = async(companyId:string)=>{
     try{
-        const leaveRequests = await tableDB.listRows({
-            databaseId:DATABASE_ID,
-            tableId:LEAVEREQUEST_TABLE_ID,
-            queries:[
-                Query.equal('companyId', companyId),
-                Query.equal('approvalStatus', 'pending')
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/search?companyId=${companyId}&approvalStatus=pending`,{
+            method:"GET"
         })
 
-
-        return leaveRequests
+        const data = await res.json()
+        return data
 
     }catch(err){
         console.log(err)
@@ -96,15 +78,13 @@ export const listPendingLeaveRequests = async(companyId:string)=>{
 //get all request for a user
 export const listEmpLeaveRequests = async(userId:string)=>{
     try{
-        const leaveRequests = await tableDB.listRows({
-            databaseId:DATABASE_ID,
-            tableId:LEAVEREQUEST_TABLE_ID,
-            queries:[
-                Query.equal('userId', userId),
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/search?userId=${userId}`,{
+            method:"GET"
         })
 
-        return leaveRequests
+        const data = await res.json()
+
+        return data
 
     }catch(err){
         console.log(err)

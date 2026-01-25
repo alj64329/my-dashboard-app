@@ -1,56 +1,45 @@
-import { ID, tableDB } from "@/src/lib/appwrite"
-import { ExpenseReq } from "@/src/types/appwriteDb.types"
-import { Query } from "appwrite"
+import { ExpenseReq } from "@/src/types/index.types"
 
-const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
-const EXPENSEREQUEST_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_EXPENSEREQUEST_TABLE_ID as string
+const BACKEND_ENDPOINT = `${process.env.NEXT_PUBLIC_BACKEND_ENDOPOINT}/expense-requests`
 
-//create row
-export const createExpenseRequest = async(data:Omit<ExpenseReq,'rowId'>)=>{
+//create expense-requests
+export const createExpenseRequest = async(request:Partial<ExpenseReq>)=>{
         try{
-            const expenseRequest = await tableDB.createRow({
-                databaseId: DATABASE_ID,
-                tableId: EXPENSEREQUEST_TABLE_ID,
-                rowId:ID.unique(),
-                data:{
-                    userId:data.userId,
-                    companyId:data.companyId,
-                    title:data.title,
-                    category:data.category,
-                    amount:data.amount,
-                    desc:data.desc,
-                    receipt:data.receipt,
-                    approvalStatus:data.approvalStatus
-                }
+            const res = await fetch(BACKEND_ENDPOINT,{
+                method:"POST",
+                headers:{
+                    "Content-type" :"application/json",
+                },
+                body:JSON.stringify({
+                    request
+                }),
             })
-    
+
+            const data = await res.json()
+
             console.log("Expense request has been created")
-            return expenseRequest
+            return data
         }catch(err){
             console.log(err)
         }
 }
 
 //modify the request
-export const modifyRequest = async (data:ExpenseReq)=>{
+export const modifyRequest = async (expenseReqId:string, updates:Partial<ExpenseReq>)=>{
     try{
-        const expenseRequest = await tableDB.updateRow({
-            databaseId: DATABASE_ID,
-            tableId: EXPENSEREQUEST_TABLE_ID,
-            rowId:data.rowId,
-            data:{
-                userId:data.userId,
-                companyId:data.companyId,
-                title:data.title,
-                category:data.category,
-                amount:data.amount,
-                desc:data.desc,
-                receipt:data.receipt,
-                approvalStatus:data.approvalStatus
-            }
+        const res = await fetch(`${BACKEND_ENDPOINT}/${expenseReqId}`,{
+            method:"PUT",
+            headers:{
+                "Content-type" :"application/json",
+            },
+            body:JSON.stringify({
+                updates
+            }),
         })
 
-        return expenseRequest
+        const data = await res.json()
+
+        return data
     }catch(err){
         console.log(err)
     }
@@ -59,15 +48,13 @@ export const modifyRequest = async (data:ExpenseReq)=>{
 //get all requests for a company
 export const listExpenseRequests = async(companyId:string)=>{
     try{
-        const expenseRequests = tableDB.listRows({
-            databaseId:DATABASE_ID,
-            tableId:EXPENSEREQUEST_TABLE_ID,
-            queries:[
-                Query.equal('companyId', companyId)
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/search?companyId=${companyId}`,{
+            method:"GET"
         })
 
-        return expenseRequests
+        const data = await res.json()
+
+        return data
     }catch(err){
         console.log(err)
     }
@@ -76,17 +63,13 @@ export const listExpenseRequests = async(companyId:string)=>{
 //get pending request in a comapny
 export const listPendingExpenseRequests = async(companyId:string)=>{
     try{
-        const expenseRequests = tableDB.listRows({
-            databaseId:DATABASE_ID,
-            tableId:EXPENSEREQUEST_TABLE_ID,
-            queries:[
-                Query.equal('companyId', companyId),
-                Query.equal('approvalStatus', 'pending')
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/search?companyId=${companyId}&approvalStatus=pending`,{
+            method:"GET"
         })
 
-        return expenseRequests
+        const data = await res.json()
 
+        return data
     }catch(err){
         console.log(err)
     }
@@ -95,16 +78,13 @@ export const listPendingExpenseRequests = async(companyId:string)=>{
 //get all request for a user
 export const listEmpExpenseRequests = async(userId:string)=>{
     try{
-        const expenseRequests = tableDB.listRows({
-            databaseId:DATABASE_ID,
-            tableId:EXPENSEREQUEST_TABLE_ID,
-            queries:[
-                Query.equal('userId', userId),
-            ]
+        const res = await fetch(`${BACKEND_ENDPOINT}/search?userId=${userId}`,{
+            method:"GET"
         })
 
-        return expenseRequests
+        const data = await res.json()
 
+        return data
     }catch(err){
         console.log(err)
     }

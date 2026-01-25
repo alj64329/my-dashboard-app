@@ -33,7 +33,6 @@ const page = () => {
 
     //   if(!temp) return
 
-    //   const appwriteId = temp.userId
     //store company name and email in sessionStorage
     sessionStorage.setItem(
         "registrationData",

@@ -76,7 +76,7 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
                 console.error("Error creating users")
                 return
             }
-            // userInfo?.setUser(user)
+
             //update company with admin userId
             const adminId = user._id
 
@@ -101,10 +101,8 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
 
            //register user
            user = await registerUser(newUser)
-        //    userInfo?.setUser(user)
 
         }
-
 
         //login
         const loggedInUser = await login(data.email,password1)
@@ -115,7 +113,6 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         }
 
         userInfo?.handleSetLoggedInUser(loggedInUser)
-        
 
         //toaster
         toast.success('Successfully logged in. You are directing to Dashboard page', {
@@ -133,8 +130,8 @@ const AuthFormBase = ({h2Title, authFormType , data}:AuthFormprops) => {
         //claer sessionStorage
         sessionStorage.clear()
 
-        // //direct to dashboard
-        // router.replace(dashboardRoute)
+        //direct to dashboard
+        router.replace(dashboardRoute)
     }
 
     useEffect(()=>{

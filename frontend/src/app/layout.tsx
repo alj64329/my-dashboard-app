@@ -5,6 +5,7 @@ import { UserProvider } from "../context/UserContext";
 import {config} from "@fortawesome/fontawesome-svg-core"
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import AutoLogout from "../components/AutoLogout";
+import { ToastContainer } from "react-toastify";
 config.autoAddCss= false
 
 export const metadata: Metadata = {
@@ -44,6 +45,7 @@ export default function RootLayout({
         className='antialiased max-w-[1800px] mx-auto'
       >
         <UserProvider>
+        <ToastContainer />
           {children}
         </UserProvider>
         <AutoLogout/>

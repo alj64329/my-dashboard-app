@@ -1,3 +1,4 @@
+"use client"
 import {
   Table,
   TableBody,
@@ -14,15 +15,14 @@ import { listUsersByCompany, modifyUsers } from "@/src/features/employee.feature
 import { User } from "@/src/types/index.types"
 import { CldImage } from "next-cloudinary"
 import { useContext, useEffect, useState } from "react"
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Bounce, toast } from 'react-toastify';
 
-type Props = {}
 
-const page = (props: Props) => {
+const page = () => {
   const userInfo = useContext(UserContext)
   const comapnyId = userInfo?.loggedInUser?.companyId._Id
   const [employees, setEmployees]= useState<Omit<User,'password'>[]>([])
-  const [update, setUpdate] = useState<Partial<User>|null>()
+  const [update, setUpdate] = useState<Omit<User,'password'>|null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const onClose = ()=>{
@@ -30,66 +30,56 @@ const page = (props: Props) => {
   }
 
   const getEmployees = async()=>{
-    // if(!comapnyId){
-    //   console.log("compnay Id not exist")
-    //   return
-    // }
-    // const rowList = await listUsersByCompany(comapnyId)
+    if(!comapnyId){
+      console.log("compnay Id not exist")
+      return
+    }
 
-    // if(!rowList){
-    //   setEmployees([])
-    //   return
-    // }
+    const employees = await listUsersByCompany(comapnyId)
 
-    // // const mappedEmployees:APTUser[]= rowList.rows.map((row)=>({
-    // //   rowId:row.$id,
-    // //   name:row.name,
-    // //   email:row.email,
-    // //   role:row.role,
-    // //   position:row.position,
-    // //   companyId:row.companyId,
-    // //   appwriteId:row.appwriteId,
-    // //   profilePic:row.profilePic
-    // // }))
+    if(!employees){
+      setEmployees([])
+      return
+    }
 
-    // // setEmployees(mappedEmployees)
+    setEmployees(employees)
   }
 
   //modify employee function
-  const updateEmployee = async(updatedEmp:Partial<User>)=>{
+  const updateEmployee = async(userId:string,data:Partial<User>)=>{
 
-    // const updates = await modifyUsers(updatedEmp)
+    const updates = await modifyUsers(userId,data)
 
-    // if(!updates){
-    //   //toaster
-    //   toast('Something went wrong, please try again',{
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: true,
-    //     closeOnClick: false,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "colored",
-    //     transition: Bounce,
-    //   })
-    //   console.log("something went wrong")
-    //   return
-    // }
-    // //toaster
-    // toast('User has been updated',{
-    //   position: "top-right",
-    //   autoClose: 5000,
-    //   hideProgressBar: true,
-    //   closeOnClick: false,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    //   theme: "colored",
-    //   transition: Bounce,
-    // })
+    if(!updates){
+      //toaster
+      toast('Something went wrong, please try again',{
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      })
+      console.log("something went wrong")
+      return
+    }
+    //toaster
+    toast('User has been updated',{
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      transition: Bounce,
+    })
 
-    // console.log("User has been updated")
+    console.log("User has been updated")
   }
 
   const rowClickHandler = (emp:Omit<User,'password'>)=>{
@@ -138,7 +128,6 @@ const page = (props: Props) => {
           }
         </TableBody>
       </Table>
-      <ToastContainer />
       <Modal isOpen={isModalOpen} setIsClose={onClose} employee={update} onUpdate={updateEmployee}/>
     </div>
   )

@@ -30,8 +30,8 @@ type Props = {
       type:"leave",
       data:PendingTableLeave
     }| null,
-  employee?:User |null,
-  onUpdate?:(updatedEmp:User)=> void,
+  employee?:Omit<User,'password'> |null,
+  onUpdate?:(userId:string,data:Partial<User>)=> void,
 
   FormComponent?:React.ComponentType<{formType:RequestType}>,
   formType?:RequestType
@@ -39,6 +39,7 @@ type Props = {
 
 const Modal = ({isOpen, setIsClose, title, ContentComponent, dataset, FormComponent, formType}: Props) => {
 
+  if(!isOpen) return null
   return (
     <div>
       <Dialog

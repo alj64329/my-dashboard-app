@@ -23,9 +23,9 @@ const signup = () => {
             setError("Company exists in our database.")
             return
         }
-        const temp = await sendOTP(email)
+        // const temp = await sendOTP(email)
 
-        if(!temp) return
+        // if(!temp) return
 
         //store company name and email in localStorage
         sessionStorage.setItem(
@@ -37,7 +37,7 @@ const signup = () => {
                 role:Role.admin})
         )
 
-        router.push("/admin-signup/step2")
+        router.push("/admin-signup/step3")
     }
 
   return (

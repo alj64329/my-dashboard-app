@@ -1,12 +1,7 @@
-import { account, tableDB } from "@/src/lib/appwrite"
+
 import { User } from "@/src/types/index.types"
-import { AppwriteException, ID, Query } from "appwrite"
 import { nanoid } from "nanoid"
 import { useRouter } from "next/navigation"
-
-const DATABASE_ID = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID as string
-const COMPANY_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_COMPANY_TABLE_ID as string
-const USER_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_USER_TABLE_ID as string
 
 const BACKEND_ENDPOINT = process.env.NEXT_PUBLIC_BACKEND_ENDOPOINT as string
 
@@ -237,16 +232,13 @@ export const logout = async()=>{
 
         if(!res.ok){
             console.log("Error in logout")
-            return
+            return false
         }
 
-        return
+        return true
 
     }catch(err){
-        if(err instanceof AppwriteException){
-            if(err.code === 401){
-                console.log("none has been logged in")
-            }
-        }
+        console.error("logout failed")
+        return false
     }
 }
