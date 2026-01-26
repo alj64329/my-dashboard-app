@@ -12,7 +12,7 @@ export const adminMenu:NavUlType[] = [
     {page:"Projects", icon:VscProject, route:"/admin/projects"},
     {page:"Expense History", icon:LiaFileInvoiceDollarSolid, route:"/admin/expense_history"},
     {page:"Leave History",icon:CiCalendar, route:"/admin/leave_history"},
-    {page:"Setting",icon:CiSettings,route:"/admin/setting"}
+    // {page:"Setting",icon:CiSettings,route:"/admin/setting"}
 ]
 
 export const empMenu:NavUlType[]=[
@@ -21,5 +21,5 @@ export const empMenu:NavUlType[]=[
     {page:"Projects",icon:VscProject, route:"/employee/projects"},
     {page:"Expense History", icon:LiaFileInvoiceDollarSolid, route:"/employee/expense_history"},
     {page:"Leave History",icon:CiCalendar, route:"/employee/leave_history"},
-    {page:"Setting", icon:CiSettings, route:"/employee/setting"}
+    // {page:"Setting", icon:CiSettings, route:"/employee/setting"}
 ]

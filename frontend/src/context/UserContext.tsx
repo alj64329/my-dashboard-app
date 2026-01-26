@@ -1,7 +1,6 @@
 "use client"
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { LoggedInUser, UserContentType } from "../types/usercontent.types";
-import { getCompany, getUser } from "../utils/dashboad";
 import { Page } from "../types/dashboard.types";
 // import { cookies } from "next/headers";
 

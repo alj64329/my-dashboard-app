@@ -11,7 +11,7 @@ export default function Home() {
   const home="/"
 
   const loggedInUser = userInfo?.loggedInUser
-  const setLoggedInUser = userInfo?.setLoggedInUser
+  const setLoggedInUser = userInfo?.handleSetLoggedInUser
 
   const logoutHandler = ()=>{
     logout()
