@@ -1,29 +1,54 @@
 'use client'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { FiEdit } from "react-icons/fi";
-import { GoTrash } from "react-icons/go";
+
 import useFetchById from "@/src/hooks/useFetchById"
-import { User } from "@/src/types/index.types"
+import { Role, User } from "@/src/types/index.types"
 import { useParams } from "next/navigation"
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
+import ItemDetail from "@/src/components/dashboard/ItemDetail";
+import { deleteEmployee, modifyUsers } from "@/src/features/employee.features"
+
+type UserDisplayType={
+    _id:string,
+    name:string,
+    email:string,
+    position:string,
+    role:Role
+}
 
 const page = () => {
     const empId = useParams().id?.toString()
     const {data, isLoading, errorMessage } = empId?useFetchById<User>("users",empId):
     {data:null, isLoading:false, errorMessage: "MIssing employee user id"}
-    const [formData, setFormData]= useState<Partial<User>|null>()
-    const [isEditOn, setIsEditOn] = useState(false)
+    const [formData, setFormData]= useState<UserDisplayType|null>(null)
     
     const title ="Employee Detail"
-    const nonEditKey =["name", "_id","email"]
+    const nonEditKey : (keyof UserDisplayType)[] =["name", "_id","email"]
 
+    const onEditUser = (updates:UserDisplayType) =>{
+        const userId = updates._id
+        const updatedInfo ={
+            position:updates.position,
+            role:updates.role
+        }
+
+        const updatedUser = modifyUsers(userId, updatedInfo)
+
+        if(!updatedUser){
+            console.log("Error occurs")
+            return
+        }
+
+    }
+
+    const onDeleteUser = (id:string)=>{
+        const deletedUser = deleteEmployee(id)
+
+        if(!deletedUser){
+            console.log("Error occurs")
+            return
+        }
+        console.log("successfully deleted")
+    }
 
     useEffect(()=>{
         if(isLoading) return
@@ -37,22 +62,20 @@ const page = () => {
             role:data.role
         })
         }
-    },[isLoading])
+    },[isLoading,data])
 
-    const handleOnChange = (e:ChangeEvent<HTMLInputElement>)=>{
-        const {name, value} = e.target
-
-        setFormData(prev=>({
-            ...prev,
-            [name]:value
-        }))
+    if(isLoading){
+        return(
+            <div
+            className="w-full h-full flex justify-center items-center">
+                <div>
+                    Loading...
+                </div>
+            </div>
+        )
     }
 
-    const handleEditSubmit =(e:FormEvent)=>{
-        e.preventDefault()
-    }
-
-    if(errorMessage && !data){
+    if(errorMessage || !data){
         return (
             <div
             className="w-full h-full flex justify-center items-center">
@@ -67,52 +90,13 @@ const page = () => {
     <div>
         <div
         className="flex pt-20 justify-center w-full h-full">
-
-            <form
-            onSubmit={handleEditSubmit}
-            className="flex flex-col gap-6 w-fit border py-8 px-6 md:px-18 rounded-2xl">
-                <div
-                className="flex justify-end gap-4 text-[16px]">
-                    <button
-                    type="button"
-                    onClick={()=>setIsEditOn(true)}
-                    className="cursor-pointer">
-                        <FiEdit/>
-                    </button>
-                    <button
-                    type="button"
-                    className="cursor-pointer">
-                        <GoTrash/>
-                    </button>
-                </div>
-                <div className="py-4 text-xl text-center font-bold">
-                    {title}
-                </div>
-                {
-                    formData&&Object.keys(formData).map((key)=>(
-                <div
-                key={key}
-                className={`flex justify-between ${key==="_id"&& "hidden"}`}>
-                    <div>{key.toUpperCase()}: </div>
-                    {(isEditOn&&!nonEditKey.includes(key))
-                    ?<input 
-                    type="text" 
-                    name={key}
-                    value={formData[key as keyof User]}
-                    onChange={handleOnChange}
-                    className="ms-2 border-b w-[150px]"/>
-                    :<span
-                    className={`${!formData[key as keyof User]&&"text-gray-400"}`}>
-                        {formData[key as keyof User]?formData[key as keyof User]:"null"}</span>
-                        }
-                </div>
-                    ))
-                }
-
-                {isEditOn&&
-                <button
-                type="submit">Save</button>}
-            </form>
+            {formData&&
+            <ItemDetail 
+            title={title} 
+            nonEditKey={nonEditKey} 
+            data={formData} 
+            onDelete={onDeleteUser} 
+            onEdit={onEditUser}/>}
         </div>
 
     </div>

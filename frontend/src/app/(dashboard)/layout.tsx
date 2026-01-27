@@ -28,7 +28,7 @@ const layout = ({children}:{children:React.ReactNode}) => {
 
       <main className="w-full">
         <SidebarTrigger
-        className="absolute bg-white rounded-full border p-1 left-[5%] lg:left-[270px] top-[10px] z-3" />
+        className="absolute bg-white rounded-full border p-1 left-[5%] md:left-[270px] top-[10px] z-3" />
         <div 
         className="h-[50px] w-full bg-gray-200"></div>
         {children}
