@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react"
 
-export default function useFetchCompanyData(route:string,id:string){
-    const [data, setData]= useState([])
+type FetchResult<T>={
+  data:T|null,
+  isLoading:boolean,
+  errorMessage:string|null
+}
+
+export default function useFetchById<T>(route:string,id:string):FetchResult<T>{
+    const [data, setData]= useState<T|null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [errorMessage, setErrorMessage]= useState('')
 

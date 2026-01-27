@@ -1,0 +1,1 @@
+export const companyId = "69601bb9950cb89b80d9c574"

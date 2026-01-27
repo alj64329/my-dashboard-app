@@ -10,7 +10,19 @@ import {
   SidebarMenuItem,
   SidebarMenuButton
 } from "@/components/ui/sidebar"
-import { CldImage } from 'next-cloudinary';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemSeparator,
+  ItemTitle,
+} from "@/components/ui/item"
+
 import { TbLogout } from "react-icons/tb";
 import { CiSettings } from "react-icons/ci";
 
@@ -46,7 +58,7 @@ export function DashBoardSidebar({companyName, role}:Props) {
 
   return (
       <Sidebar
-      className="px-4 py-8">
+      className="px-3 py-8">
         <SidebarHeader>
           <div
           className="text-center">
@@ -87,26 +99,28 @@ export function DashBoardSidebar({companyName, role}:Props) {
         </div>
 
         <SidebarFooter>
-          <div
-          className="flex items-center justify-between">
-            <CldImage
-            src={defaultUser.profilePic}
-            alt={defaultUser.alt}
-            width={30}
-            height={30}
-            className="rounded-xl"
-            />
-            <div>
-              Username
-            </div>
-
-            <div
-            onClick={handleLogout}
-            className="cursor-pointer">
-              <TbLogout
-              className="text-lg"/>
-            </div>
-          </div>
+        <ItemGroup className="max-w-sm">
+            <Item variant="outline"
+            className="p-2">
+              <ItemMedia>
+                <Avatar>
+                  <AvatarImage src={defaultUser.url} />
+                  <AvatarFallback>{("username").charAt(0)}</AvatarFallback>
+                </Avatar>
+              </ItemMedia>
+              <ItemContent className="gap-1">
+                <ItemTitle>username</ItemTitle>
+                <ItemDescription></ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Button variant="ghost" size="icon" 
+                className="rounded-full"
+                onClick={handleLogout}>
+                  <TbLogout />
+                </Button>
+              </ItemActions>
+            </Item>
+        </ItemGroup>
         </SidebarFooter>
       </Sidebar>
   )
