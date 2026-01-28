@@ -9,6 +9,8 @@ const getLReqs = async()=>{
 //get request by Id
 const getLReqById = async(reqId:string)=>{
     return await LeaveRequest.findById(reqId)
+    .populate({path:"userId"})
+    .lean()
 }
 
 //get requestd by userId

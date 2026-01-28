@@ -8,6 +8,8 @@ const getEReqs = async()=>{
 //get request by Id
 const getEReqById = async(reqId:string)=>{
     return await ExpenseRequest.findById(reqId)
+    .populate({path:"userId"})
+    .lean()
 }
 
 //get requestd by userId
