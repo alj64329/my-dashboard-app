@@ -8,6 +8,7 @@ import ItemDetail from "@/src/components/dashboard/ItemDetail";
 import { deleteEmployee, modifyUsers } from "@/src/features/employee.features"
 import Link from "next/link"
 
+//
 type UserDisplayType={
     _id:string,
     name:string,
@@ -17,13 +18,15 @@ type UserDisplayType={
 }
 
 const page = () => {
+    
     const empId = useParams().id?.toString()
     const {data, isLoading, errorMessage } = empId?useFetchById<User>("users",empId):
-    {data:null, isLoading:false, errorMessage: "MIssing employee user id"}
+    {data:null, isLoading:false, errorMessage: "Missing employee user id"}
     const [formData, setFormData]= useState<UserDisplayType|null>(null)
     
     const title ="Employee Detail"
     const nonEditKey : (keyof UserDisplayType)[] =["name", "_id","email"]
+    const backLink = "/admin/employees"
 
     const onEditUser = (updates:UserDisplayType) =>{
         const userId = updates._id
@@ -90,7 +93,7 @@ const page = () => {
   return (
     <div>
         <div className="flex w-full p-4">
-            <Link href="/admin/employees"
+            <Link href={backLink}
             className="flex items-center gap-4 w-fit">
             <IoChevronBackOutline/> Back
             </Link>

@@ -23,11 +23,11 @@ import { usePathname, useRouter } from "next/navigation";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  setIsModalOpen:()=>void,
-  setUpdateEmp?:(emp:User)=>void,
+  // setIsModalOpen:()=>void,
+  // setUpdateEmp?:(emp:User)=>void,
 }
 
-export function DataTable<TData, TValue>({columns, data, setIsModalOpen, setUpdateEmp}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({columns, data}: DataTableProps<TData, TValue>) {
     const [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
     const pathname = usePathname()

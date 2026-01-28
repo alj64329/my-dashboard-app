@@ -7,12 +7,16 @@ import { companyId } from '@/src/constants/test'
 import Modal from '@/src/components/dashboard/Modal'
 import { User } from '@/src/types/index.types'
 
+type InputType={
+  name:string,
+  label:string,
+  element:React.ElementType
+}
 
 
 const page = () => {
   const {isLoading, errorMessage, data} = useFetchCompanyData("users",companyId)
   const [isModalOpen, setIsModalOpen] =useState(false)
-  const [updateEmp, setUpdateEmp] = useState<User|null>(null)
   const pageTitle ="Employees"
 
   const onClose = ()=>{
@@ -23,13 +27,9 @@ const page = () => {
     setIsModalOpen(true)
   }
 
-  const handleSetUpdateEmp =(emp:User)=>{
-    setUpdateEmp(emp)
-  }
-
   useEffect(()=>{
 
-  },[isLoading, updateEmp])
+  },[isLoading])
 
   if(isLoading){
     return (
@@ -58,8 +58,8 @@ const page = () => {
           Add New
         </button>
       </div>
-      <DataTable columns={columns} data={data} setIsModalOpen={handleOnOpen} setUpdateEmp={handleSetUpdateEmp}/>
-      {isModalOpen&&<Modal isOpen={isModalOpen} setIsClose={onClose} employee={updateEmp}/>}
+      <DataTable columns={columns} data={data} />
+      {isModalOpen&&<Modal isOpen={isModalOpen} setIsClose={onClose}/>}
     </div>
   )
 }

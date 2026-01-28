@@ -72,7 +72,7 @@ export interface LeaveReq{
     approvalStatus:ApprovalStatus
 }
 
-//appwrite expense_request
+// expense_request
 export interface ExpenseReq{
     _id:string,
     userId:string,

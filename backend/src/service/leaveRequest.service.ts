@@ -19,6 +19,8 @@ const getUserLReq = async(userId:string)=>{
 //get requests by companyId
 const getCompLReq = async(companyId:string)=>{
     return await LeaveRequest.find({companyId})
+    .populate({path:"userId"})
+    .lean()
 }
 
 //get pending requests by companyId

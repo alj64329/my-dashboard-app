@@ -18,6 +18,8 @@ const getUserEReq = async(userId:string)=>{
 //get requests by companyId
 const getCompEReq = async(companyId:string)=>{
     return await ExpenseRequest.find({companyId})
+    .populate({path:"userId"})
+    .lean()
 }
 
 //get requests by companyId and status
