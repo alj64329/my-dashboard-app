@@ -1,11 +1,12 @@
 'use client'
-
+import { IoChevronBackOutline } from "react-icons/io5";
 import useFetchById from "@/src/hooks/useFetchById"
 import { Role, User } from "@/src/types/index.types"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import ItemDetail from "@/src/components/dashboard/ItemDetail";
 import { deleteEmployee, modifyUsers } from "@/src/features/employee.features"
+import Link from "next/link"
 
 type UserDisplayType={
     _id:string,
@@ -88,6 +89,12 @@ const page = () => {
 
   return (
     <div>
+        <div className="flex w-full p-4">
+            <Link href="/admin/employees"
+            className="flex items-center gap-4 w-fit">
+            <IoChevronBackOutline/> Back
+            </Link>
+        </div>
         <div
         className="flex pt-20 justify-center w-full h-full">
             {formData&&
