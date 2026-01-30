@@ -43,7 +43,12 @@ const removeTeam = async(id:string)=>{
 const getMemberInProj = async(projectId:string)=>{
    return await Team.find({projectId})
     .populate({
-        path:"userId"
+        path:"userId",
+        select:"name position"
+    })
+    .populate({
+        path:"projectId",
+        select:"project_name status"
     })
     .lean()
 }
