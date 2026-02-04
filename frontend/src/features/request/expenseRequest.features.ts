@@ -10,9 +10,9 @@ export const createExpenseRequest = async(request:Partial<ExpenseReq>)=>{
                 headers:{
                     "Content-type" :"application/json",
                 },
-                body:JSON.stringify({
+                body:JSON.stringify(
                     request
-                }),
+                ),
             })
 
             const data = await res.json()
@@ -32,9 +32,9 @@ export const modifyRequest = async (expenseReqId:string, updates:Partial<Expense
             headers:{
                 "Content-type" :"application/json",
             },
-            body:JSON.stringify({
+            body:JSON.stringify(
                 updates
-            }),
+            ),
         })
 
         const data = await res.json()
@@ -88,4 +88,21 @@ export const listEmpExpenseRequests = async(userId:string)=>{
     }catch(err){
         console.log(err)
     }
+}
+
+//get request detail
+export const getExpenseRequestById =async(id:string)=>{
+    try{
+        const res = await fetch(`${BACKEND_ENDPOINT}/${id}`,{
+            method:"GET",
+        })
+
+        const data = await res.json()
+
+        return data
+    }catch(err){
+        console.log(`Error fetching: ${err}`)
+        return null
+    }
+
 }

@@ -1,10 +1,9 @@
 
 
+import ConfirmDialog from '@/src/components/ConfirmDialog'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { FiEdit } from 'react-icons/fi'
 import { GoTrash } from 'react-icons/go'
-import ConfirmDialog from '../ConfirmDialog'
-import Link from 'next/link'
 
 
 type WithId = {
@@ -27,10 +26,9 @@ type Props<T extends WithId> = {
     fieldConfig?:FieldConfig<T>
     onDelete?:(id:string)=>void,
     onEdit?:(updates:T)=>Promise<boolean>
-    hrefLink?:string
 }
 
-const ItemDetail = <T extends WithId>({title, nonEditKey, data, fieldConfig, onEdit, onDelete, hrefLink}: Props<T>) => {
+const ProjectItemDetail = <T extends WithId>({title, nonEditKey, data, fieldConfig, onEdit, onDelete}: Props<T>) => {
     const [formData, setFormData] = useState<T|null>(data)
     const [isEditOn, setIsEditOn] = useState(false)
     const [isConfirmOpen, setIsComfirmOpen] = useState(false)
@@ -73,15 +71,19 @@ const ItemDetail = <T extends WithId>({title, nonEditKey, data, fieldConfig, onE
         }
 
         const renderDisplayField =(key :keyof T)=>{
-            if(Array.isArray(formData?.[key])&&hrefLink){
-                // const arr = formData?.[key]
+            if(Array.isArray(formData?.[key])){
+                const arr = formData?.[key]
 
                 return (
-                    <div>
-                        <Link href={hrefLink}>
-                            See {key.toString().toLowerCase()}
-                        </Link>
-                    </div>
+                    <ul
+                    className='py-2 ps-25 flex flex-col gap-2'>
+                        {arr.map((item)=>(
+                            <li
+                            key={item._id}>
+                                {item.name}
+                            </li>
+                        ))}
+                    </ul>
                 )
             }
             return (
@@ -198,7 +200,7 @@ const ItemDetail = <T extends WithId>({title, nonEditKey, data, fieldConfig, onE
                 formData&&(Object.keys(formData) as (keyof T)[]).map((key)=>(
             <div
             key={key.toString()}
-            className={`flex justify-between ${key==="_id"&& "hidden"}`}>
+            className={`${!Array.isArray(formData[key])&&"flex justify-between"} ${key==="_id"&& "hidden"}`}>
                 <div>{key.toString().toUpperCase()}: </div>
                 
                 {(isEditOn&&!nonEditKey.includes(key as keyof T))
@@ -221,4 +223,4 @@ const ItemDetail = <T extends WithId>({title, nonEditKey, data, fieldConfig, onE
   )
 }
 
-export default ItemDetail
+export default ProjectItemDetail

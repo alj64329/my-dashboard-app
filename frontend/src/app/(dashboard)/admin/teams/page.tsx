@@ -1,11 +1,15 @@
-import ProjectsClient from "./ProjectsClient"
+import TeamsClient from "./TeamsClient"
+
 
 const page = () => {
+
   return (
-    <div
+
+     <div
     className="py-5 px-6 lg:px-10">
-      <ProjectsClient/>
+      <TeamsClient/>
     </div>
+
   )
 }
 

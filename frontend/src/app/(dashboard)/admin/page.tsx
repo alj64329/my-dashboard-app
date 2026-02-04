@@ -1,12 +1,5 @@
-"use client"
-
-import { UserContext } from '@/src/context/UserContext'
-import { useContext, useEffect, useState } from 'react'
 
 const page = () => {
-  const userInfo = useContext(UserContext)
-  const company = userInfo?.loggedInUser?.companyId
-  const companyName = company?.company_name
   
   // useEffect(()=>{
   //   if(!modalData) return

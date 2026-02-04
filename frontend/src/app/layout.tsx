@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "../css/globals.css";
 import { Karla, Kumbh_Sans, Nunito_Sans } from 'next/font/google'
-import { UserProvider } from "../context/UserContext";
 import {config} from "@fortawesome/fontawesome-svg-core"
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { ToastContainer } from "react-toastify";
@@ -43,10 +42,8 @@ export default function RootLayout({
       <body
         className='antialiased max-w-[1800px] mx-auto'
       >
-        <UserProvider>
         <ToastContainer />
           {children}
-        </UserProvider>
       </body>
     </html>
   );

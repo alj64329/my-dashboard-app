@@ -42,15 +42,16 @@ export interface User{
 }
 
 export enum Status{
-    planned,
-    active,
-    completed
+    planned ="Planned",
+    active ="Active",
+    completed="Completed"
 }
 
 export interface Project{
     _id: string,
+    project_name:string
     companyId: string,
-    status:string
+    status:Status
 }
 
 export interface Team{

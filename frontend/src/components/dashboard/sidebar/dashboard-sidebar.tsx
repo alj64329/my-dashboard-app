@@ -1,3 +1,4 @@
+"use client"
 import {
   Sidebar,
   SidebarContent,
@@ -40,7 +41,6 @@ type Props={
 
 export function DashBoardSidebar({companyName, role}:Props) {
   const [menu, setMenu] = useState<NavUlType[]>([])
-  role = Role.admin
   companyName="ABC Company"
 
   useEffect(()=>{
@@ -61,7 +61,7 @@ export function DashBoardSidebar({companyName, role}:Props) {
       className="px-3 py-8">
         <SidebarHeader>
           <div
-          className="text-center">
+          className="text-center text-lg font-semibold">
             {companyName}
           </div>
         </SidebarHeader>

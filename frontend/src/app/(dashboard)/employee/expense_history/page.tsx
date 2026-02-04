@@ -1,10 +1,18 @@
-import React from 'react'
+import TablePageClient from '../components/TablePageClient'
+import { columns } from './columns'
 
-type Props = {}
 
-const page = (props: Props) => {
+
+const page = () => {
+
+  const pageTitle ="Expense Request"
+  const endpoint="expense-requests"
+
   return (
-    <div>page</div>
+    <div
+    className="py-5 px-6 lg:px-10">
+      <TablePageClient title={pageTitle} endpoint={endpoint} columns={columns}/>
+    </div>
   )
 }
 

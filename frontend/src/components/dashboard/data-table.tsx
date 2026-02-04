@@ -47,8 +47,8 @@ export function DataTable<TData, TValue>({columns, data}: DataTableProps<TData, 
 //   }
 
     const showDetail = (row:Row<TData>)=>{
-        const emp = row.original as User
-        router.push(`${pathname}/${emp._id}`)
+        const item = row.original as User //need to unassign with User type
+        router.push(`${pathname}/${item._id}`)
     }
 
   return (

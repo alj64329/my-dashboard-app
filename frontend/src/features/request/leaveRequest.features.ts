@@ -10,9 +10,9 @@ export const createLeaveRequest = async(request:Partial<LeaveReq>)=>{
                 headers:{
                     "Content-type" :"application/json",
                 },
-                body:JSON.stringify({
+                body:JSON.stringify(
                     request
-                }),
+                ),
             })
 
             const data = await res.json()
@@ -25,16 +25,16 @@ export const createLeaveRequest = async(request:Partial<LeaveReq>)=>{
 }
 
 //modify the request
-export const modifyRequest = async (requestId:string,update:LeaveReq)=>{
+export const modifyRequest = async (requestId:string,update:Partial<LeaveReq>)=>{
     try{
         const res = await fetch(`${BACKEND_ENDPOINT}/${requestId}`,{
             method:"PUT",
             headers:{
                 "Content-type" :"application/json",
             },
-            body:JSON.stringify({
+            body:JSON.stringify(
                 update
-            }),
+            ),
         })
 
         const data = await res.json()
@@ -88,5 +88,21 @@ export const listEmpLeaveRequests = async(userId:string)=>{
 
     }catch(err){
         console.log(err)
+    }
+}
+
+//get request detail
+export const getLeaveRequestById =async(id:string)=>{
+    try{
+        const res = await fetch(`${BACKEND_ENDPOINT}/${id}`,{
+            method:"GET",
+        })
+
+        const data = await res.json()
+
+        return data
+    }catch(err){
+        console.log(`Error fetching: ${err}`)
+        return null
     }
 }
