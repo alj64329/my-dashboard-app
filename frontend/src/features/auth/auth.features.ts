@@ -20,6 +20,7 @@ export const companyExist = async (comapnyName:string, adminEmail:string)=>{
        return true
     }catch(err){
         console.log(err)
+        return false
     }
 }
 

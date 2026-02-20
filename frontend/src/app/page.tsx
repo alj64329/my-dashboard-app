@@ -1,24 +1,12 @@
-"use client"
+
 import Link from "next/link";
-import { useContext, useEffect } from "react";
-import { UserContext } from "../context/UserContext";
-import { logout } from "../features/auth/auth.features";
-import { useRouter } from "next/navigation";
+
 
 export default function Home() {
-  const userInfo= useContext(UserContext)
-  const router = useRouter()
-  const home="/"
 
-  const loggedInUser = userInfo?.loggedInUser
-  const setLoggedInUser = userInfo?.handleSetLoggedInUser
 
   const logoutHandler = ()=>{
-    logout()
-    if(setLoggedInUser){
-      setLoggedInUser(null)
-    }
-    router.push(home)
+
   }
   
 
@@ -26,7 +14,7 @@ export default function Home() {
     <div className="flex justify-center pt-20">
       <div>
         <Link 
-        href="/admin-signup"
+        href="/admin-signup/step1"
         className="bg-(--color-second-green) py-3 px-[1.3rem] rounded-3xl text-white font-karla font-bold">
         Get Started
         </Link>
@@ -36,10 +24,10 @@ export default function Home() {
           className="text-second-green ps-2">Log in</Link>
         </div>
         {/* Temporary Log out */}
-        {loggedInUser&&
+        {/* {loggedInUser&&
         <div className="text-grey-200 pt-16 text-center">
           <button  className="cursor-pointer" onClick={logoutHandler}>Logout</button>
-        </div>}
+        </div>} */}
       </div>
     </div>
   );

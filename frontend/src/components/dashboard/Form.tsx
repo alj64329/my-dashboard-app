@@ -2,12 +2,12 @@
 import React, { FormEvent, useState } from 'react'
 
 
-type Props<T extends object> = {
-    defaultData:T //empty data with property
+type Props = {
+    subhead:string,
+
 }
 
-const Form = <T extends object>({defaultData}: Props<T>) => {
-    const [formData, setFormData] =useState(defaultData)
+const Form = ({subhead}:Props) => {
     const submitHandler =(e:FormEvent)=>{
         e.preventDefault()
 

@@ -5,39 +5,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { User } from "@/src/types/index.types"
 
 type Props = {
     isOpen:boolean,
     setIsClose:()=>void
     title?:string,
-//     ContentComponent?:React.ComponentType<
-//     {dataset:
-//       {
-//         type:"expense",
-//         data:PendingTableExpense
-//       }|{
-//         type:"leave",
-//         data:PendingTableLeave
-//       }}>
-
-//   dataset?:{
-//       type:"expense",
-//       data:PendingTableExpense
-//     }|{
-//       type:"leave",
-//       data:PendingTableLeave
-//     }| null,
-
-    employee?:User |null,
-    onUpdate?:(userId:string,data:Partial<User>)=> void,
-
-//   FormComponent?:React.ComponentType<{formType:RequestType}>,
-//   formType?:RequestType
-
+    ContentComponent?:React.ComponentType
 }
 
-const Modal = ({isOpen, setIsClose, employee}: Props) => {
+const Modal = ({isOpen, setIsClose,ContentComponent }: Props) => {
 
     if(!isOpen){
         return null
@@ -52,9 +28,7 @@ const Modal = ({isOpen, setIsClose, employee}: Props) => {
             <DialogTitle />
             <DialogDescription/>
             </DialogHeader>
-
-            {/* {(ContentComponent&& dataset)&&<ContentComponent dataset={dataset}/>}
-            {(FormComponent && formType )&&<FormComponent formType={formType}/>} */}
+            {ContentComponent&&<ContentComponent/>}
         </DialogContent>
       </Dialog>
     </div>
